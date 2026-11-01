@@ -1,0 +1,7 @@
+numpy
+pandas
+matplotlib
+scipy
+openpyxl
+jinja2>=3.1.6
+ipykernel
