@@ -1,0 +1,892 @@
+﻿qid,question,category,fingerprint,asks,given_by,answer_status,answer_short,verdict,sql,sql_result,note,reviewed_at
+q-ee68a1a070,"Give me the point for Hamburg, the city",,3f5b4048b5468751,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Hamburg,correct,"
+SELECT 'city' AS kind, city_name AS name, ST_AsText(centroid) AS type, 1 AS vertices
+FROM cities WHERE city_name IN ('Hamburg')
+ORDER BY 1, 2
+","kind,name,type,vertices,db / city,Hamburg,,1,Agent-001 / city,Hamburg,POINT(10 53.55),1,Agent-002",Agent-001 has Hamburg (city) without a point; it got POINT(10 53.55) via KQML.,2026-11-07T14:18:33
+q-f21a844357,Show me cities within 60 km of Hannover?,,fc7221bc79f469db,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"65 item(s): Aerzen, Alfeld, Bad Fallingbostel, Bad Gandersheim, Bad Münder am Deister, Bad Nenndorf, Bad Pyrmont, Bad Salzdetfurth, Barntrup, Barsinghausen …",correct,"
+SELECT city_name, ST_AsText(centroid) AS point
+FROM cities
+WHERE ST_DWithin(centroid::geography, {city:Hannover}::geography, 60000)
+  AND city_name <> 'Hannover'
+ORDER BY city_name
+","city_name,point,db / Aerzen,POINT(9.2638 52.0496),""Agent-001, Agent-002"" / Bad Münder am Deister,POINT(9.4653 52.1992),""Agent-001, Agent-002"" / Bad Pyrmont,POINT(9.2636 51.9867),""Agent-001, Agent-002"" / Barsinghausen,POINT(9.4606 52.3031),""Agent-001, Agent-002"" / Burgdorf,POINT(10.0078 52.4438),""Agent-001, Agent-002"" / Edemissen,POINT(10.2606 52.3856),""Agent-001, Agent-002"" / Elze,POINT(9.7333 52.1167),""Agent-001, Agent-002"" / Gifhorn,POINT(10.5464 52.4886),""Agent-001, Agent-002"" / Großburgwedel,POINT(9.8567 52.492),""Agent-001, Agent-002"" / Hambühren,POINT(9.9833 52.6333),""Agent-001, Agent-002"" / Hemmingen,POINT(9.7256 52.3236),""Agent-001, Agent-002"" / Hessisch Oldendorf,POINT(9.25 52.1667),""Agent-001, Agent-002"" / Hohenhameln,POINT(10.0664 52.26),""Agent-001, Agent-002"" / Laatzen,POINT(9.8133 52.3077),""Agent-001, Agent-002"" / Lahstedt,POINT(10.2167 52.25),""Agent-001, Agent-002"" / Langenhagen,POINT(9.74 52.4394),""Agent-001, Agent-002"" / Lehrte,POINT(9.9769 52.3725),""Agent-001, Agent-002"" / Lengede,POINT(10.3078 52.2049),""Agent-001, Agent-002"" / Meine,POINT(10.5333 52.3833),""Agent-001, Agent-002"" / Minden,POINT(8.9167 52.2883),""Agent-001, Agent-002"" / Nordstemmen,POINT(9.7839 52.1605),""Agent-001, Agent-002"" / Rehburg-Loccum,POINT(9.2078 52.4508),""Agent-001, Agent-002"" / Rethen,POINT(9.8236 52.2878),""Agent-001, Agent-002"" / Rinteln,POINT(9.0792 52.186),""Agent-001, Agent-002"" / Ronnenberg,POINT(9.6556 52.3194),""Agent-001, Agent-002"" / Salzgitter,POINT(10.3593 52.1503),""Agent-001, Agent-002"" / Sarstedt,POINT(9.8606 52.2394),""Agent-001, Agent-002"" / Sehnde,POINT(9.9642 52.3161),""Agent-001, Agent-002"" / Uetze,POINT(10.2039 52.4661),""Agent-001, Agent-002"" / Wendeburg,POINT(10.4 52.3167),""Agent-001, Agent-002""",,2026-11-07T14:19:02
+t001,What was the population of Brandenburg in 2018?,DATA_LOOKUP,e86d2a8e7b7911e4,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Brandenburg 2018,correct,"
+SELECT s.state_name, d.stat_year, d.population
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Brandenburg')
+  AND d.stat_year IN (2018)
+ORDER BY s.state_name, d.stat_year
+","state_name,stat_year,population,db / Brandenburg,2018,2511917,""Agent-001, Agent-002""",correct,2026-11-01T16:30:09
+t002,How many marriages took place in Sachsen-Anhalt in 2016?,DATA_LOOKUP,4395597f453b2c8e,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Sachsen-Anhalt 2016,correct,"
+SELECT s.state_name, d.stat_year, d.marriages
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Sachsen-Anhalt')
+  AND d.stat_year IN (2016)
+ORDER BY s.state_name, d.stat_year
+","state_name,stat_year,marriages,db / Sachsen-Anhalt,2016,10465,Agent-001",,2026-11-01T16:31:07
+t003,Give me the live births in Rheinland-Pfalz for 2019.,DATA_LOOKUP,0065fbc04021770d,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Rheinland-Pfalz 2019,correct,,,,2026-11-07T12:01:19
+t004,Population of Hamburg and Bremen in 2020,DATA_LOOKUP,1f3be35681a132ef,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"2 item(s): Hamburg 2020, Bremen 2020",correct,"
+SELECT s.state_name, d.stat_year, d.population
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Hamburg', 'Bremen')
+  AND d.stat_year IN (2020)
+ORDER BY s.state_name, d.stat_year
+","state_name,stat_year,population,db / Bremen,2020,680130,Agent-002 / Hamburg,2020,1852478,Agent-002",,2026-11-01T16:37:32
+t005,Show the marriages in Bayern from 2016 to 2019.,DATA_LOOKUP,c53ff461ab2ae4fa,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),partial-complete,"4 item(s): Bayern 2016, Bayern 2017, Bayern 2019, Bayern 2018",correct,"
+SELECT s.state_name, d.stat_year, d.marriages
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Bayern')
+  AND d.stat_year IN (2016, 2017, 2018, 2019)
+ORDER BY s.state_name, d.stat_year
+","state_name,stat_year,marriages,db / Bayern,2016,66324.0,Agent-002 / Bayern,2017,66790.0,Agent-002 / Bayern,2018,,Agent-002 / Bayern,2019,68501.0,Agent-002",,2026-11-01T16:38:17
+t006,How many babies were born in Schleswig-Holstein in 2017 and 2018?,DATA_LOOKUP,6afa0d34ef03f544,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"2 item(s): Schleswig-Holstein 2017, Schleswig-Holstein 2018",correct,"
+SELECT s.state_name, d.stat_year, d.live_births
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Schleswig-Holstein')
+  AND d.stat_year IN (2017, 2018)
+ORDER BY s.state_name, d.stat_year
+","state_name,stat_year,live_births,db / Schleswig-Holstein,2017,12845,Agent-001 / Schleswig-Holstein,2018,12924,Agent-001",,2026-11-01T16:39:00
+t007,"Population, marriages and live births of Saarland in 2015",DATA_LOOKUP,7ea6e28da0288eb1,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Saarland 2015,correct,"
+SELECT s.state_name, d.stat_year, d.live_births, d.marriages, d.population
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Saarland')
+  AND d.stat_year IN (2015)
+ORDER BY s.state_name, d.stat_year
+","state_name,stat_year,live_births,marriages,population,db / Saarland,2015,3957,4861,995597,Agent-001",,2026-11-01T16:39:49
+t008,What was the population of every German state in 2019?,DATA_LOOKUP,71e1c199608ddd18,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),partial-complete,"16 item(s): Baden-Württemberg 2019, Bayern 2019, Nordrhein-Westfalen 2019, Hamburg 2019, Thüringen 2019, Brandenburg 2019, Schleswig-Holstein 2019, Sachsen 2019, Rheinland-Pfalz 2019, Hessen 2019 …",correct,"
+SELECT s.state_name, d.stat_year, d.population
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Baden-Württemberg', 'Bayern', 'Berlin', 'Brandenburg', 'Bremen', 'Hamburg', 'Hessen', 'Mecklenburg-Vorpommern', 'Niedersachsen', 'Nordrhein-Westfalen', 'Rheinland-Pfalz', 'Saarland', 'Sachsen', 'Sachsen-Anhalt', 'Schleswig-Holstein', 'Thüringen')
+  AND d.stat_year IN (2019)
+ORDER BY s.state_name, d.stat_year
+","state_name,stat_year,population,db / Brandenburg,2019,2521893.0,Agent-001 / Hessen,2019,6288080.0,""Agent-001, Agent-002"" / Mecklenburg-Vorpommern,2019,,Agent-001 / Niedersachsen,2019,7993608.0,""Agent-001, Agent-002"" / Nordrhein-Westfalen,2019,17947221.0,""Agent-001, Agent-002"" / Rheinland-Pfalz,2019,4093903.0,""Agent-001, Agent-002"" / Saarland,2019,,Agent-001 / Sachsen,2019,4071971.0,Agent-001 / Sachsen-Anhalt,2019,,Agent-001 / Schleswig-Holstein,2019,2903773.0,Agent-001 / Thüringen,2019,2133378.0,Agent-001 / Baden-Württemberg,2019,11100394.0,Agent-002 / Bayern,2019,13124737.0,Agent-002 / Berlin,2019,,Agent-002 / Brandenburg,2019,,Agent-002 / Bremen,2019,681202.0,Agent-002 / Hamburg,2019,1847253.0,Agent-002",,2026-11-01T16:40:44
+t009,How many inhabitants did Lower Saxony have in 2021?,DATA_LOOKUP,e7c83d7a5c64c33a,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Niedersachsen 2021,correct,"
+SELECT s.state_name, d.stat_year, d.population
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Niedersachsen')
+  AND d.stat_year IN (2021)
+ORDER BY s.state_name, d.stat_year
+","state_name,stat_year,population,db / Niedersachsen,2021,8027031,Agent-002",,2026-11-01T21:14:03
+t010,Marriages in North Rhine-Westphalia in 2022,DATA_LOOKUP,02d5568b8703629e,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Nordrhein-Westfalen 2022,correct,"
+SELECT s.state_name, d.stat_year, d.marriages
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Nordrhein-Westfalen')
+  AND d.stat_year IN (2022)
+ORDER BY s.state_name, d.stat_year
+","state_name,stat_year,marriages,db / Nordrhein-Westfalen,2022,85008,Agent-002",,2026-11-01T21:14:32
+t011,Population of Thuringia in 1995,DATA_LOOKUP,cecfef4a4203abcb,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),not-found,1 item(s): Thüringen 1995,correct,"
+SELECT s.state_name, d.stat_year, d.population
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Thüringen')
+  AND d.stat_year IN (1995)
+ORDER BY s.state_name, d.stat_year
+","state_name,stat_year,population,db / Thüringen,1995,,Agent-001",,2026-11-01T21:15:09
+t012,How many people live in Mecklenburg-Vorpommern?,DATA_LOOKUP,70ae705647459ae0,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),rejected,"{""status"": ""rejected""}",correct,"
+SELECT s.state_name, d.stat_year, d.population
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Mecklenburg-Vorpommern')
+ORDER BY s.state_name, d.stat_year
+","state_name,stat_year,population,db / Mecklenburg-Vorpommern,1990,,Agent-001 / Mecklenburg-Vorpommern,1991,,Agent-001 / Mecklenburg-Vorpommern,1992,,Agent-001 / Mecklenburg-Vorpommern,1993,,Agent-001 / Mecklenburg-Vorpommern,1994,,Agent-001 / Mecklenburg-Vorpommern,1995,,Agent-001 / Mecklenburg-Vorpommern,1996,,Agent-001 / Mecklenburg-Vorpommern,1997,,Agent-001 / Mecklenburg-Vorpommern,1998,,Agent-001 / Mecklenburg-Vorpommern,1999,,Agent-001 / Mecklenburg-Vorpommern,2000,,Agent-001 / Mecklenburg-Vorpommern,2001,,Agent-001 / Mecklenburg-Vorpommern,2002,,Agent-001 / Mecklenburg-Vorpommern,2003,,Agent-001 / Mecklenburg-Vorpommern,2004,,Agent-001 / Mecklenburg-Vorpommern,2005,,Agent-001 / Mecklenburg-Vorpommern,2006,,Agent-001 / Mecklenburg-Vorpommern,2007,,Agent-001 / Mecklenburg-Vorpommern,2008,,Agent-001 / Mecklenburg-Vorpommern,2009,,Agent-001 / Mecklenburg-Vorpommern,2010,,Agent-001 / Mecklenburg-Vorpommern,2011,,Agent-001 / Mecklenburg-Vorpommern,2012,,Agent-001 / Mecklenburg-Vorpommern,2013,,Agent-001 / Mecklenburg-Vorpommern,2014,,Agent-001 / Mecklenburg-Vorpommern,2015,1612362.0,Agent-001 / Mecklenburg-Vorpommern,2016,1610674.0,Agent-001 / Mecklenburg-Vorpommern,2017,,Agent-001 / Mecklenburg-Vorpommern,2018,1609675.0,Agent-001 / Mecklenburg-Vorpommern,2019,,Agent-001",,2026-11-01T21:34:21
+t013,Give me the live births of Berlin,DATA_LOOKUP,70ae705647459ae0,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),rejected,"{""status"": ""rejected""}",correct,"
+SELECT s.state_name, d.stat_year, d.live_births
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Berlin')
+ORDER BY s.state_name, d.stat_year
+","state_name,stat_year,live_births,db / Berlin,2010,17090.0,Agent-002 / Berlin,2011,,Agent-002 / Berlin,2012,17898.0,Agent-002 / Berlin,2013,18045.0,Agent-002 / Berlin,2014,19021.0,Agent-002 / Berlin,2015,19614.0,Agent-002 / Berlin,2016,20995.0,Agent-002 / Berlin,2017,20723.0,Agent-002 / Berlin,2018,20612.0,Agent-002 / Berlin,2019,,Agent-002 / Berlin,2020,,Agent-002 / Berlin,2021,20176.0,Agent-002 / Berlin,2022,18485.0,Agent-002 / Berlin,2023,17473.0,Agent-002 / Berlin,2024,17362.0,Agent-002 / Berlin,2025,16973.0,Agent-002",,2026-11-01T21:35:56
+t014,What was the combined population of Brandenburg and Sachsen in 2018?,DATA_LOOKUP,0b2b5df8d5c97ecd,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"2 item(s): Brandenburg 2018, Sachsen 2018",correct,"
+SELECT s.state_name, d.stat_year, d.population
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Brandenburg', 'Sachsen')
+  AND d.stat_year IN (2018)
+ORDER BY s.state_name, d.stat_year
+","state_name,stat_year,population,db / Brandenburg,2018,2511917,""Agent-001, Agent-002"" / Sachsen,2018,4077937,Agent-001",,2026-11-01T21:39:37
+t015,"Total marriages in Hessen, Bayern and Baden-Württemberg in 2017",DATA_LOOKUP,9a7ba6bee085c1f8,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"3 item(s): Hessen 2017, Baden-Württemberg 2017, Bayern 2017",correct,"
+SELECT s.state_name, d.stat_year, d.marriages
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Hessen', 'Bayern', 'Baden-Württemberg')
+  AND d.stat_year IN (2017)
+ORDER BY s.state_name, d.stat_year
+","state_name,stat_year,marriages,db / Hessen,2017,,Agent-001 / Baden-Württemberg,2017,54591,Agent-002 / Bayern,2017,66790,Agent-002 / Hessen,2017,29281,Agent-002",,2026-11-01T21:41:29
+t016,How many people lived in Niedersachsen and Bremen together from 2016 to 2018?,DATA_LOOKUP,1280762cc76bf652,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),partial-complete,"6 item(s): Bremen 2016, Bremen 2018, Niedersachsen 2016, Niedersachsen 2017, Niedersachsen 2018, Bremen 2017",correct,"
+SELECT s.state_name, d.stat_year, d.population
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Niedersachsen', 'Bremen')
+  AND d.stat_year IN (2016, 2017, 2018)
+ORDER BY s.state_name, d.stat_year
+","state_name,stat_year,population,db / Niedersachsen,2016,7945685.0,""Agent-001, Agent-002"" / Niedersachsen,2017,7962775.0,Agent-001 / Niedersachsen,2018,7982448.0,""Agent-001, Agent-002"" / Bremen,2016,678753.0,Agent-002 / Bremen,2017,,Agent-002 / Bremen,2018,682986.0,Agent-002 / Niedersachsen,2017,,Agent-002",,2026-11-01T21:54:35
+t017,Population of Bavaria in 2030,DATA_LOOKUP,4a4fefa64c0fbad3,36,GPT-4o mini / A1 (3); GPT-4o mini / A2 (3); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),not-found,1 item(s): Bayern 2030,correct,"
+SELECT s.state_name, d.stat_year, d.population
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Bayern')
+  AND d.stat_year IN (2030)
+ORDER BY s.state_name, d.stat_year
+","state_name,stat_year,population,db","No database has Bayern 2030 (agent_2_db covers 2010–2025, agent_1_db has no Bayern rows),
+so not-found is correct. Answer 2: GPT-4o mini dropped the year 2030 during extraction
+(4/10 asks) and the agent rejected the question instead of searching.",2026-11-07T12:24:20
+t017,Population of Bavaria in 2030,DATA_LOOKUP,70ae705647459ae0,4,GPT-4o mini / A1 (2); GPT-4o mini / A2 (2),rejected,"{""status"": ""rejected""}",wrong,"
+SELECT s.state_name, d.stat_year, d.population
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Bayern')
+  AND d.stat_year IN (2030)
+ORDER BY s.state_name, d.stat_year
+","state_name,stat_year,population,db","No database has Bayern 2030 (agent_2_db covers 2010–2025, agent_1_db has no Bayern rows),
+so not-found is correct. Answer 2: GPT-4o mini dropped the year 2030 during extraction
+(4/10 asks) and the agent rejected the question instead of searching.",2026-11-07T12:24:20
+t018,What is the combined number of marriages of Berlin and Brandenburg?,DATA_LOOKUP,70ae705647459ae0,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),rejected,"{""status"": ""rejected""}",correct,"
+SELECT s.state_name, d.stat_year, d.marriages
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Berlin', 'Brandenburg')
+ORDER BY s.state_name, d.stat_year
+","state_name,stat_year,marriages,db / Brandenburg,1990,16814.0,Agent-001 / Brandenburg,1991,8328.0,Agent-001 / Brandenburg,1992,,Agent-001 / Brandenburg,1993,7901.0,Agent-001 / Brandenburg,1994,8502.0,Agent-001 / Brandenburg,1995,8775.0,Agent-001 / Brandenburg,1996,8756.0,Agent-001 / Brandenburg,1997,8709.0,Agent-001 / Brandenburg,1998,9266.0,Agent-001 / Brandenburg,1999,10219.0,Agent-001 / Brandenburg,2000,9804.0,Agent-001 / Brandenburg,2001,9744.0,Agent-001 / Brandenburg,2002,,Agent-001 / Brandenburg,2003,,Agent-001 / Brandenburg,2004,,Agent-001 / Brandenburg,2005,11504.0,Agent-001 / Brandenburg,2006,11316.0,Agent-001 / Brandenburg,2007,11430.0,Agent-001 / Brandenburg,2008,11757.0,Agent-001 / Brandenburg,2009,12066.0,Agent-001 / Brandenburg,2010,,Agent-001 / Brandenburg,2011,12115.0,""Agent-001, Agent-002"" / Brandenburg,2012,,Agent-001 / Brandenburg,2013,12245.0,""Agent-001, Agent-002"" / Brandenburg,2014,12812.0,""Agent-001, Agent-002"" / Brandenburg,2015,13314.0,""Agent-001, Agent-002"" / Brandenburg,2016,13817.0,Agent-001 / Brandenburg,2017,14156.0,""Agent-001, Agent-002"" / Brandenburg,2018,,Agent-001 / Brandenburg,2019,14203.0,Agent-001",year is not there,2026-11-07T12:28:46
+t019,Show me the boundary of Niedersachsen,GEOMETRY_LOOKUP,050ca51c3831af65,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Niedersachsen,correct,"
+SELECT 'state' AS kind, state_name AS name, ST_GeometryType(geo_shape) AS type,
+       (SELECT COUNT(DISTINCT (p).geom) FROM ST_DumpPoints(geo_shape) p) AS vertices
+FROM states WHERE state_name IN ('Niedersachsen')
+ORDER BY 1, 2
+","kind,name,type,vertices,db / state,Niedersachsen,ST_MultiPolygon,14321,""Agent-001, Agent-002""",,2026-11-07T12:36:03
+t020,Give me the shape of Baden-Württemberg as WKT,GEOMETRY_LOOKUP,54e3468b0db0b013,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Baden-Württemberg,correct,"
+SELECT 'state' AS kind, state_name AS name, ST_GeometryType(geo_shape) AS type,
+       NULLIF((SELECT COUNT(DISTINCT (ROUND(ST_X((p).geom)::numeric, 5), ROUND(ST_Y((p).geom)::numeric, 5)))
+               FROM ST_DumpPoints(geo_shape) p), 0) AS vertices
+FROM states WHERE state_name IN ('Baden-Württemberg')
+ORDER BY 1, 2
+","kind,name,type,vertices,db / state,Baden-Württemberg,ST_MultiPolygon,5091,""Agent-001, Agent-002""",,2026-11-07T12:57:38
+t021,What are the coordinates of the city of Leipzig?,GEOMETRY_LOOKUP,9fa022756ece07f5,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Leipzig,correct,"
+SELECT 'city' AS kind, city_name AS name, ST_AsText(centroid) AS type, 1 AS vertices
+FROM cities WHERE city_name IN ('Leipzig')
+ORDER BY 1, 2
+","kind,name,type,vertices,db / city,Leipzig,POINT(12.3711 51.3394),1,""Agent-001, Agent-002""",,2026-11-01T22:01:13
+t022,Return the geometries of Saarland and Rheinland-Pfalz,GEOMETRY_LOOKUP,3702d78a89cc0a4f,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"2 item(s): Rheinland-Pfalz, Saarland",correct,"
+SELECT 'state' AS kind, state_name AS name, ST_GeometryType(geo_shape) AS type,
+       NULLIF((SELECT COUNT(DISTINCT (ROUND(ST_X((p).geom)::numeric, 5), ROUND(ST_Y((p).geom)::numeric, 5)))
+               FROM ST_DumpPoints(geo_shape) p), 0) AS vertices
+FROM states WHERE state_name IN ('Rheinland-Pfalz', 'Saarland')
+ORDER BY 1, 2
+","kind,name,type,vertices,db / state,Rheinland-Pfalz,ST_MultiPolygon,1449,""Agent-001, Agent-002"" / state,Saarland,ST_MultiPolygon,426,""Agent-001, Agent-002""",,2026-11-07T13:01:14
+t023,Where is Freiburg im Breisgau located?,GEOMETRY_LOOKUP,73ce1aad8f962283,10,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5),rejected,"{""status"": ""rejected""}",wrong,"
+SELECT 'city' AS kind, city_name AS name, ST_AsText(centroid) AS type, 1 AS vertices
+FROM cities WHERE city_name IN ('Freiburg im Breisgau')
+ORDER BY 1, 2
+","kind,name,type,vertices,db / city,Freiburg im Breisgau,POINT(7.85 47.995),1,Agent-002","Freiburg im Breisgau exists only in agent_2_db: POINT(7.85 47.995), inside Baden-Württemberg.
+Answer 1 matches it; Agent-001 got the point from Agent-002 via KQML (1 turn).
+Answer 2: GPT-4o mini classified the question as UNRELATED (10/10 asks) and rejected it -
+classification error, no SQL or KQML ran.",2026-11-07T13:04:53
+t023,Where is Freiburg im Breisgau located?,GEOMETRY_LOOKUP,eaedee88537c7e09,30,Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Freiburg im Breisgau,correct,"
+SELECT 'city' AS kind, city_name AS name, ST_AsText(centroid) AS type, 1 AS vertices
+FROM cities WHERE city_name IN ('Freiburg im Breisgau')
+ORDER BY 1, 2
+","kind,name,type,vertices,db / city,Freiburg im Breisgau,POINT(7.85 47.995),1,Agent-002","Freiburg im Breisgau exists only in agent_2_db: POINT(7.85 47.995), inside Baden-Württemberg.
+Answer 1 matches it; Agent-001 got the point from Agent-002 via KQML (1 turn).
+Answer 2: GPT-4o mini classified the question as UNRELATED (10/10 asks) and rejected it -
+classification error, no SQL or KQML ran.",2026-11-07T13:04:53
+t024,Give me the polygon of Bavaria,GEOMETRY_LOOKUP,5fd29f9a697e17cf,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Bayern,correct,"
+SELECT 'state' AS kind, state_name AS name, ST_GeometryType(geo_shape) AS type,
+       NULLIF((SELECT COUNT(DISTINCT (ROUND(ST_X((p).geom)::numeric, 5), ROUND(ST_Y((p).geom)::numeric, 5)))
+               FROM ST_DumpPoints(geo_shape) p), 0) AS vertices
+FROM states WHERE state_name IN ('Bayern')
+ORDER BY 1, 2
+","kind,name,type,vertices,db / state,Bayern,,,Agent-001 / state,Bayern,ST_MultiPolygon,3868,Agent-002",,2026-11-07T13:06:17
+t025,"Shapes of Kiel, Lübeck and Rostock",GEOMETRY_LOOKUP,86286e55d000abca,10,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5),complete,"{""result"": {""geometry_type"": ""MULTIPOINT"", ""srid"": 4326, ""wkt"": ""MULTIPOINT [3 vertices #165b8bb953]""}, ""status"": ""complete""}",partly,"
+SELECT 'city' AS kind, city_name AS name, ST_AsText(centroid) AS type, 1 AS vertices
+FROM cities WHERE city_name IN ('Kiel', 'Lübeck', 'Rostock')
+ORDER BY 1, 2
+","kind,name,type,vertices,db / city,Kiel,POINT(10.1394 54.3233),1,""Agent-001, Agent-002"" / city,Rostock,,1,Agent-001 / city,Lübeck,POINT(10.6864 53.8697),1,Agent-002 / city,Rostock,POINT(12.1333 54.0833),1,Agent-002","DB: Kiel (10.1394 54.3233), Lübeck (10.6864 53.8697), Rostock (12.1333 54.0833).
+Answer 1 matches all three. Agent-001 lacks Lübeck and Rostock's point and fetched both
+from Agent-002 with one KQML ask (missing_geometries).
+Answer 2 (GPT-4o mini): misclassified as SPATIAL_OPERATION and returned one MULTIPOINT.
+Its fingerprint #165b8bb953 equals the three correct points, but the city names are lost -> partly.",2026-11-07T13:09:30
+t025,"Shapes of Kiel, Lübeck and Rostock",GEOMETRY_LOOKUP,b64509f1d6954254,30,Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"3 item(s): Kiel, Lübeck, Rostock",correct,"
+SELECT 'city' AS kind, city_name AS name, ST_AsText(centroid) AS type, 1 AS vertices
+FROM cities WHERE city_name IN ('Kiel', 'Lübeck', 'Rostock')
+ORDER BY 1, 2
+","kind,name,type,vertices,db / city,Kiel,POINT(10.1394 54.3233),1,""Agent-001, Agent-002"" / city,Rostock,,1,Agent-001 / city,Lübeck,POINT(10.6864 53.8697),1,Agent-002 / city,Rostock,POINT(12.1333 54.0833),1,Agent-002","DB: Kiel (10.1394 54.3233), Lübeck (10.6864 53.8697), Rostock (12.1333 54.0833).
+Answer 1 matches all three. Agent-001 lacks Lübeck and Rostock's point and fetched both
+from Agent-002 with one KQML ask (missing_geometries).
+Answer 2 (GPT-4o mini): misclassified as SPATIAL_OPERATION and returned one MULTIPOINT.
+Its fingerprint #165b8bb953 equals the three correct points, but the city names are lost -> partly.",2026-11-07T13:09:30
+t026,Show the outline of Schleswig-Holstein and the location of Flensburg,GEOMETRY_LOOKUP,0285859b3609adc5,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"2 item(s): Flensburg, Schleswig-Holstein",correct,"
+SELECT 'state' AS kind, state_name AS name, ST_GeometryType(geo_shape) AS type,
+       NULLIF((SELECT COUNT(DISTINCT (ROUND(ST_X((p).geom)::numeric, 5), ROUND(ST_Y((p).geom)::numeric, 5)))
+               FROM ST_DumpPoints(geo_shape) p), 0) AS vertices
+FROM states WHERE state_name IN ('Schleswig-Holstein')
+UNION ALL
+SELECT 'city' AS kind, city_name AS name, ST_AsText(centroid) AS type, 1 AS vertices
+FROM cities WHERE city_name IN ('Flensburg')
+ORDER BY 1, 2
+","kind,name,type,vertices,db / city,Flensburg,,1,Agent-001 / state,Schleswig-Holstein,ST_MultiPolygon,27974,""Agent-001, Agent-002"" / city,Flensburg,POINT(9.4367 54.7819),1,Agent-002",Agent-001 has Flensburg without a point; it got POINT(9.4367 54.7819) from Agent-002 via KQML.,2026-11-07T13:37:07
+t027,Get the geometry of the state of Bremen,GEOMETRY_LOOKUP,eb5245a78e002911,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Bremen,correct,"
+SELECT 'state' AS kind, state_name AS name, ST_GeometryType(geo_shape) AS type,
+       NULLIF((SELECT COUNT(DISTINCT (ROUND(ST_X((p).geom)::numeric, 5), ROUND(ST_Y((p).geom)::numeric, 5)))
+               FROM ST_DumpPoints(geo_shape) p), 0) AS vertices
+FROM states WHERE state_name IN ('Bremen')
+ORDER BY 1, 2
+","kind,name,type,vertices,db / state,Bremen,ST_MultiPolygon,156,""Agent-001, Agent-002""",,2026-11-07T13:38:09
+t029,Boundaries of all German federal states,GEOMETRY_LOOKUP,6cc81318b96cf2ed,30,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5),complete,"16 item(s): Baden-Württemberg, Bayern, Berlin, Brandenburg, Bremen, Hamburg, Hessen, Mecklenburg-Vorpommern, Niedersachsen, Nordrhein-Westfalen …",correct,"
+SELECT 'state' AS kind, state_name AS name, ST_GeometryType(geo_shape) AS type,
+       NULLIF((SELECT COUNT(DISTINCT (ROUND(ST_X((p).geom)::numeric, 5), ROUND(ST_Y((p).geom)::numeric, 5)))
+               FROM ST_DumpPoints(geo_shape) p), 0) AS vertices
+FROM states WHERE state_name IN ('Baden-Württemberg', 'Bayern', 'Berlin', 'Brandenburg', 'Bremen', 'Hamburg', 'Hessen', 'Mecklenburg-Vorpommern', 'Niedersachsen', 'Nordrhein-Westfalen', 'Rheinland-Pfalz', 'Saarland', 'Sachsen', 'Sachsen-Anhalt', 'Schleswig-Holstein', 'Thüringen')
+ORDER BY 1, 2
+","kind,name,type,vertices,db / state,Baden-Württemberg,ST_MultiPolygon,5091.0,""Agent-001, Agent-002"" / state,Bayern,,,Agent-001 / state,Berlin,,,Agent-001 / state,Brandenburg,ST_MultiPolygon,2479.0,""Agent-001, Agent-002"" / state,Bremen,ST_MultiPolygon,156.0,""Agent-001, Agent-002"" / state,Hamburg,ST_MultiPolygon,244.0,""Agent-001, Agent-002"" / state,Hessen,,,Agent-001 / state,Mecklenburg-Vorpommern,ST_MultiPolygon,35026.0,""Agent-001, Agent-002"" / state,Niedersachsen,ST_MultiPolygon,14321.0,""Agent-001, Agent-002"" / state,Nordrhein-Westfalen,ST_MultiPolygon,2312.0,""Agent-001, Agent-002"" / state,Rheinland-Pfalz,ST_MultiPolygon,1449.0,""Agent-001, Agent-002"" / state,Saarland,ST_MultiPolygon,426.0,""Agent-001, Agent-002"" / state,Sachsen,ST_MultiPolygon,2402.0,""Agent-001, Agent-002"" / state,Sachsen-Anhalt,ST_MultiPolygon,1444.0,""Agent-001, Agent-002"" / state,Schleswig-Holstein,ST_MultiPolygon,27974.0,""Agent-001, Agent-002"" / state,Thüringen,ST_MultiPolygon,1696.0,""Agent-001, Agent-002"" / state,Bayern,ST_MultiPolygon,3868.0,Agent-002 / state,Berlin,ST_MultiPolygon,238.0,Agent-002 / state,Hessen,ST_MultiPolygon,1621.0,Agent-002","Answer 2 (Qwen3-8B + QLoRA): extraction typo 'Mecklenburg-Vorpowell', so 15 of 16 states;
+the 16th is reported as missing. The 15 shapes it returned are correct.",2026-11-07T13:39:18
+t029,Boundaries of all German federal states,GEOMETRY_LOOKUP,cabc2305de60cad0,10,Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),partial-complete,"16 item(s): Baden-Württemberg, Bayern, Berlin, Brandenburg, Bremen, Hamburg, Hessen, Mecklenburg-Vorpowell, Niedersachsen, Nordrhein-Westfalen …",partly,"
+SELECT 'state' AS kind, state_name AS name, ST_GeometryType(geo_shape) AS type,
+       NULLIF((SELECT COUNT(DISTINCT (ROUND(ST_X((p).geom)::numeric, 5), ROUND(ST_Y((p).geom)::numeric, 5)))
+               FROM ST_DumpPoints(geo_shape) p), 0) AS vertices
+FROM states WHERE state_name IN ('Baden-Württemberg', 'Bayern', 'Berlin', 'Brandenburg', 'Bremen', 'Hamburg', 'Hessen', 'Mecklenburg-Vorpommern', 'Niedersachsen', 'Nordrhein-Westfalen', 'Rheinland-Pfalz', 'Saarland', 'Sachsen', 'Sachsen-Anhalt', 'Schleswig-Holstein', 'Thüringen')
+ORDER BY 1, 2
+","kind,name,type,vertices,db / state,Baden-Württemberg,ST_MultiPolygon,5091.0,""Agent-001, Agent-002"" / state,Bayern,,,Agent-001 / state,Berlin,,,Agent-001 / state,Brandenburg,ST_MultiPolygon,2479.0,""Agent-001, Agent-002"" / state,Bremen,ST_MultiPolygon,156.0,""Agent-001, Agent-002"" / state,Hamburg,ST_MultiPolygon,244.0,""Agent-001, Agent-002"" / state,Hessen,,,Agent-001 / state,Mecklenburg-Vorpommern,ST_MultiPolygon,35026.0,""Agent-001, Agent-002"" / state,Niedersachsen,ST_MultiPolygon,14321.0,""Agent-001, Agent-002"" / state,Nordrhein-Westfalen,ST_MultiPolygon,2312.0,""Agent-001, Agent-002"" / state,Rheinland-Pfalz,ST_MultiPolygon,1449.0,""Agent-001, Agent-002"" / state,Saarland,ST_MultiPolygon,426.0,""Agent-001, Agent-002"" / state,Sachsen,ST_MultiPolygon,2402.0,""Agent-001, Agent-002"" / state,Sachsen-Anhalt,ST_MultiPolygon,1444.0,""Agent-001, Agent-002"" / state,Schleswig-Holstein,ST_MultiPolygon,27974.0,""Agent-001, Agent-002"" / state,Thüringen,ST_MultiPolygon,1696.0,""Agent-001, Agent-002"" / state,Bayern,ST_MultiPolygon,3868.0,Agent-002 / state,Berlin,ST_MultiPolygon,238.0,Agent-002 / state,Hessen,ST_MultiPolygon,1621.0,Agent-002","Answer 2 (Qwen3-8B + QLoRA): extraction typo 'Mecklenburg-Vorpowell', so 15 of 16 states;
+the 16th is reported as missing. The 15 shapes it returned are correct.",2026-11-07T13:39:18
+t030,Where is Görlitz?,GEOMETRY_LOOKUP,73ce1aad8f962283,10,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5),rejected,"{""status"": ""rejected""}",wrong,"
+SELECT 'city' AS kind, city_name AS name, ST_AsText(centroid) AS type, 1 AS vertices
+FROM cities WHERE city_name IN ('Görlitz')
+ORDER BY 1, 2
+","kind,name,type,vertices,db / city,Görlitz,POINT(14.9872 51.1528),1,Agent-002","Görlitz exists only in agent_2_db: POINT(14.9872 51.1528); Agent-001 got it via KQML.
+Answer 2: GPT-4o mini classified the question as UNRELATED (10/10 asks) - classification error.",2026-11-07T13:40:08
+t030,Where is Görlitz?,GEOMETRY_LOOKUP,9a8b055ed298fbe8,30,Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Görlitz,correct,"
+SELECT 'city' AS kind, city_name AS name, ST_AsText(centroid) AS type, 1 AS vertices
+FROM cities WHERE city_name IN ('Görlitz')
+ORDER BY 1, 2
+","kind,name,type,vertices,db / city,Görlitz,POINT(14.9872 51.1528),1,Agent-002","Görlitz exists only in agent_2_db: POINT(14.9872 51.1528); Agent-001 got it via KQML.
+Answer 2: GPT-4o mini classified the question as UNRELATED (10/10 asks) - classification error.",2026-11-07T13:40:08
+t031,Merge Sachsen and Thüringen into one shape,SPATIAL_OPERATION,0a947bd2959e3770,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"{""result"": {""geometry_type"": ""POLYGON"", ""srid"": 4326, ""wkt"": ""POLYGON [3292 vertices #9e33b04123]""}, ""status"": ""complete""}",correct,"
+-- union of Sachsen, Thüringen
+SELECT ST_GeometryType(g) AS type, NULLIF((SELECT COUNT(DISTINCT (ROUND(ST_X((p).geom)::numeric, 5), ROUND(ST_Y((p).geom)::numeric, 5)))
+               FROM ST_DumpPoints(g) p), 0) AS vertices,
+       ROUND((ST_Area(g::geography) / 1e6)::numeric) AS area_km2
+FROM (SELECT ST_Union(ARRAY[{state:Sachsen}, {state:Thüringen}]) AS g) x
+","type,vertices,area_km2,db / ST_Polygon,3292,34674,""Agent-001, Agent-002""",,2026-11-07T13:42:06
+t032,"Give me the union of Nordrhein-Westfalen, Hessen and Niedersachsen",SPATIAL_OPERATION,5b56cd1f14e27124,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"{""result"": {""geometry_type"": ""MULTIPOLYGON"", ""srid"": 4326, ""wkt"": ""MULTIPOLYGON [16026 vertices #85a7777153]""}, ""status"": ""complete""}",correct,"
+-- union of Nordrhein-Westfalen, Hessen, Niedersachsen
+SELECT ST_GeometryType(g) AS type, NULLIF((SELECT COUNT(DISTINCT (ROUND(ST_X((p).geom)::numeric, 5), ROUND(ST_Y((p).geom)::numeric, 5)))
+               FROM ST_DumpPoints(g) p), 0) AS vertices,
+       ROUND((ST_Area(g::geography) / 1e6)::numeric) AS area_km2
+FROM (SELECT ST_Union(ARRAY[{state:Nordrhein-Westfalen}, {state:Hessen}, {state:Niedersachsen}]) AS g) x
+","type,vertices,area_km2,db / ST_MultiPolygon,16026,103025,""Agent-001, Agent-002""",Agent-001 lacks Hessen's shape and got it via KQML before the union.,2026-11-07T13:42:38
+t033,Combine Rheinland-Pfalz and Saarland into a single region,SPATIAL_OPERATION,2ef94621da7faaa6,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"{""result"": {""geometry_type"": ""POLYGON"", ""srid"": 4326, ""wkt"": ""POLYGON [1355 vertices #49ba0ea776]""}, ""status"": ""complete""}",correct,"
+-- union of Rheinland-Pfalz, Saarland
+SELECT ST_GeometryType(g) AS type, NULLIF((SELECT COUNT(DISTINCT (ROUND(ST_X((p).geom)::numeric, 5), ROUND(ST_Y((p).geom)::numeric, 5)))
+               FROM ST_DumpPoints(g) p), 0) AS vertices,
+       ROUND((ST_Area(g::geography) / 1e6)::numeric) AS area_km2
+FROM (SELECT ST_Union(ARRAY[{state:Rheinland-Pfalz}, {state:Saarland}]) AS g) x
+","type,vertices,area_km2,db / ST_Polygon,1355,22497,""Agent-001, Agent-002""",,2026-11-07T13:43:06
+t034,Create one area from Bayern and Baden-Württemberg,SPATIAL_OPERATION,e9729d0bac980291,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"{""result"": {""geometry_type"": ""MULTIPOLYGON"", ""srid"": 4326, ""wkt"": ""MULTIPOLYGON [7153 vertices #19cff65e32]""}, ""status"": ""complete""}",correct,"
+-- union of Bayern, Baden-Württemberg
+SELECT ST_GeometryType(g) AS type, NULLIF((SELECT COUNT(DISTINCT (ROUND(ST_X((p).geom)::numeric, 5), ROUND(ST_Y((p).geom)::numeric, 5)))
+               FROM ST_DumpPoints(g) p), 0) AS vertices,
+       ROUND((ST_Area(g::geography) / 1e6)::numeric) AS area_km2
+FROM (SELECT ST_Union(ARRAY[{state:Bayern}, {state:Baden-Württemberg}]) AS g) x
+","type,vertices,area_km2,db / ST_MultiPolygon,7153,106191,""Agent-001, Agent-002""",Agent-001 got Bayern's shape via KQML.,2026-11-07T13:43:48
+t035,What area do Brandenburg and Berlin share?,SPATIAL_OPERATION,43183e098c81545f,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"{""note"": ""Brandenburg and Berlin share no area — they meet only along a boundary (MULTILINESTRING)."", ""result"": {""geometry_type"": ""MULTILINESTRING"", ""has_shared_area"": false, ""srid"": 4326, ""wkt"": ""MUL",correct,"
+-- intersection of Brandenburg, Berlin
+SELECT ST_GeometryType(g) AS type, NULLIF((SELECT COUNT(DISTINCT (ROUND(ST_X((p).geom)::numeric, 5), ROUND(ST_Y((p).geom)::numeric, 5)))
+               FROM ST_DumpPoints(g) p), 0) AS vertices,
+       ROUND((ST_Area(g::geography) / 1e6)::numeric) AS area_km2
+FROM (SELECT ST_Intersection({state:Brandenburg}, {state:Berlin}) AS g) x
+","type,vertices,area_km2,db / ST_MultiLineString,238,0,""Agent-001, Agent-002""","No shared area - the intersection is the common border line (same fingerprint as Berlin's
+outline). The answer says so correctly.",2026-11-07T13:44:29
+t036,Intersect Hessen with Nordrhein-Westfalen,SPATIAL_OPERATION,7ad15782c0c02c8a,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"{""note"": ""Hessen and Nordrhein-Westfalen share no area — they meet only along a boundary (MULTILINESTRING)."", ""result"": {""geometry_type"": ""MULTILINESTRING"", ""has_shared_area"": false, ""srid"": 4326, ""wk",correct,"
+-- intersection of Hessen, Nordrhein-Westfalen
+SELECT ST_GeometryType(g) AS type, NULLIF((SELECT COUNT(DISTINCT (ROUND(ST_X((p).geom)::numeric, 5), ROUND(ST_Y((p).geom)::numeric, 5)))
+               FROM ST_DumpPoints(g) p), 0) AS vertices,
+       ROUND((ST_Area(g::geography) / 1e6)::numeric) AS area_km2
+FROM (SELECT ST_Intersection({state:Hessen}, {state:Nordrhein-Westfalen}) AS g) x
+","type,vertices,area_km2,db / ST_MultiLineString,305,0,""Agent-001, Agent-002""",No shared area - Hessen and NRW meet only along the border. The answer says so correctly.,2026-11-07T13:44:54
+t037,Give me Niedersachsen with Bremen removed,SPATIAL_OPERATION,d49eecc1ea01da66,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"{""result"": {""geometry_type"": ""MULTIPOLYGON"", ""srid"": 4326, ""wkt"": ""MULTIPOLYGON [14331 vertices #05499d110f]""}, ""status"": ""complete""}",correct,"
+-- difference of Niedersachsen, Bremen
+SELECT ST_GeometryType(g) AS type, NULLIF((SELECT COUNT(DISTINCT (ROUND(ST_X((p).geom)::numeric, 5), ROUND(ST_Y((p).geom)::numeric, 5)))
+               FROM ST_DumpPoints(g) p), 0) AS vertices,
+       ROUND((ST_Area(g::geography) / 1e6)::numeric) AS area_km2
+FROM (SELECT ST_Difference({state:Niedersachsen}, {state:Bremen}) AS g) x
+","type,vertices,area_km2,db / ST_MultiPolygon,14331,47768,""Agent-001, Agent-002""",,2026-11-07T13:46:11
+t038,Show Brandenburg minus Berlin,SPATIAL_OPERATION,c3627676f9d357b2,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"{""result"": {""geometry_type"": ""POLYGON"", ""srid"": 4326, ""wkt"": ""POLYGON [2479 vertices #8e93324db7]""}, ""status"": ""complete""}",correct,"
+-- difference of Brandenburg, Berlin
+SELECT ST_GeometryType(g) AS type, NULLIF((SELECT COUNT(DISTINCT (ROUND(ST_X((p).geom)::numeric, 5), ROUND(ST_Y((p).geom)::numeric, 5)))
+               FROM ST_DumpPoints(g) p), 0) AS vertices,
+       ROUND((ST_Area(g::geography) / 1e6)::numeric) AS area_km2
+FROM (SELECT ST_Difference({state:Brandenburg}, {state:Berlin}) AS g) x
+","type,vertices,area_km2,db / ST_Polygon,2479,29458,""Agent-001, Agent-002""","Result = Brandenburg's own shape (same fingerprint #8e93324db7): Berlin is not part of
+Brandenburg's polygon, so nothing is cut out. Correct.",2026-11-07T13:46:55
+t039,Which areas belong to either Sachsen or Bayern but not both?,SPATIAL_OPERATION,6ef399b9e8f86a11,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"{""result"": {""geometry_type"": ""POLYGON"", ""srid"": 4326, ""wkt"": ""POLYGON [6136 vertices #ad8a8472a0]""}, ""status"": ""complete""}",correct,"
+-- symmetric difference of Sachsen, Bayern
+SELECT ST_GeometryType(g) AS type, NULLIF((SELECT COUNT(DISTINCT (ROUND(ST_X((p).geom)::numeric, 5), ROUND(ST_Y((p).geom)::numeric, 5)))
+               FROM ST_DumpPoints(g) p), 0) AS vertices,
+       ROUND((ST_Area(g::geography) / 1e6)::numeric) AS area_km2
+FROM (SELECT ST_SymDifference({state:Sachsen}, {state:Bayern}) AS g) x
+","type,vertices,area_km2,db / ST_Polygon,6136,88888,""Agent-001, Agent-002""","Sachsen and Bayern do not overlap, so the symmetric difference equals their union.",2026-11-07T13:47:13
+t040,Symmetric difference of Hessen and Thüringen,SPATIAL_OPERATION,6a55242f5d468793,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"{""result"": {""geometry_type"": ""POLYGON"", ""srid"": 4326, ""wkt"": ""POLYGON [2677 vertices #bcc5b7020c]""}, ""status"": ""complete""}",correct,"
+-- symmetric difference of Hessen, Thüringen
+SELECT ST_GeometryType(g) AS type, NULLIF((SELECT COUNT(DISTINCT (ROUND(ST_X((p).geom)::numeric, 5), ROUND(ST_Y((p).geom)::numeric, 5)))
+               FROM ST_DumpPoints(g) p), 0) AS vertices,
+       ROUND((ST_Area(g::geography) / 1e6)::numeric) AS area_km2
+FROM (SELECT ST_SymDifference({state:Hessen}, {state:Thüringen}) AS g) x
+","type,vertices,area_km2,db / ST_Polygon,2677,37240,""Agent-001, Agent-002""","Hessen and Thüringen do not overlap, so the symmetric difference equals their union.",2026-11-07T13:47:33
+t041,Which of Hessen and Bayern lie within 80 km of Würzburg?,SPATIAL_OPERATION,4414c709dac7fd62,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"2 item(s): Bayern, Hessen",correct,"
+SELECT state_name,
+       ROUND((ST_Distance(geo_shape::geography, {city:Würzburg}::geography) / 1000)::numeric, 1) AS km
+FROM states WHERE state_name IN ('Hessen', 'Bayern')
+ORDER BY km
+","state_name,km,db / Bayern,,Agent-001 / Hessen,,Agent-001 / Bayern,0.0,Agent-002 / Hessen,44.3,Agent-002","Bayern 0 km (Würzburg lies in Bayern), Hessen 44.3 km - both within 80 km.",2026-11-07T13:48:29
+t042,Which of Thüringen and Bayern lie within 40 km of Coburg?,SPATIAL_OPERATION,e2afb21dc26569c9,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"2 item(s): Bayern, Thüringen",correct,"
+SELECT state_name,
+       ROUND((ST_Distance(geo_shape::geography, {city:Coburg}::geography) / 1000)::numeric, 1) AS km
+FROM states WHERE state_name IN ('Thüringen', 'Bayern')
+ORDER BY km
+","state_name,km,db / Thüringen,7.3,""Agent-001, Agent-002"" / Bayern,,Agent-001 / Bayern,0.0,Agent-002","Bayern 0 km, Thüringen 7.3 km. Agent-001 got Coburg and Bayern via KQML.",2026-11-07T13:48:54
+t043,Join Niedersachsen and Schleswig-Holstein into one area and tell me which cities are inside it,SPATIAL_OPERATION,69ab5b76a805e097,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"289 item(s): Achim, Adendorf, Aerzen, Ahrensburg, Ahrensbök, Alfeld, Altenholz, Apen, Aurich, Bad Bentheim …",correct,"
+SELECT city_name, ST_AsText(centroid) AS point
+FROM cities
+WHERE ST_Within(centroid, ST_Union(ARRAY[{state:Niedersachsen}, {state:Schleswig-Holstein}]))
+ORDER BY city_name
+","city_name,point,db / Achim,POINT(9.033 53.013),""Agent-001, Agent-002"" / Aerzen,POINT(9.2638 52.0496),""Agent-001, Agent-002"" / Apen,POINT(7.8097 53.2214),""Agent-001, Agent-002"" / Aurich,POINT(7.4836 53.4714),""Agent-001, Agent-002"" / Bad Bentheim,POINT(7.1597 52.3031),""Agent-001, Agent-002"" / Bad Bevensen,POINT(10.5833 53.0792),""Agent-001, Agent-002"" / Bad Bramstedt,POINT(9.8844 53.9186),""Agent-001, Agent-002"" / Bad Laer,POINT(8.0892 52.1031),""Agent-001, Agent-002"" / Bad Münder am Deister,POINT(9.4653 52.1992),""Agent-001, Agent-002"" / Bad Oldesloe,POINT(10.3742 53.8117),""Agent-001, Agent-002"" / Bad Pyrmont,POINT(9.2636 51.9867),""Agent-001, Agent-002"" / Bad Rothenfelde,POINT(8.1606 52.1117),""Agent-001, Agent-002"" / Bad Schwartau,POINT(10.6975 53.9194),""Agent-001, Agent-002"" / Bad Zwischenahn,POINT(8.0097 53.1836),""Agent-001, Agent-002"" / Bargteheide,POINT(10.2608 53.7286),""Agent-001, Agent-002"" / Barmstedt,POINT(9.7667 53.7833),""Agent-001, Agent-002"" / Barsinghausen,POINT(9.4606 52.3031),""Agent-001, Agent-002"" / Bassum,POINT(8.7267 52.8494),""Agent-001, Agent-002"" / Belm,POINT(8.1333 52.3),""Agent-001, Agent-002"" / Bersenbrück,POINT(7.9472 52.5553),""Agent-001, Agent-002"" / Bohmte,POINT(8.3167 52.3667),""Agent-001, Agent-002"" / Bremervörde,POINT(9.1333 53.4833),""Agent-001, Agent-002"" / Brunsbüttel,POINT(9.1386 53.8964),""Agent-001, Agent-002"" / Buchholz in der Nordheide,POINT(9.8621 53.3285),""Agent-001, Agent-002"" / Burgdorf,POINT(10.0078 52.4438),""Agent-001, Agent-002"" / Cremlingen,POINT(10.6542 52.2489),""Agent-001, Agent-002"" / Cuxhaven,POINT(8.7 53.8667),""Agent-001, Agent-002"" / Delmenhorst,POINT(8.6317 53.0506),""Agent-001, Agent-002"" / Diepholz,POINT(8.3711 52.6072),""Agent-001, Agent-002"" / Dinklage,POINT(8.125 52.6622),""Agent-001, Agent-002""","289 cities, same as the SQL. Agent-001 found 156 locally and got 133 from Agent-002
+(spatial query with an exclude list).",2026-11-07T13:49:18
+t044,Combine Brandenburg and Mecklenburg-Vorpommern and list the cities inside the merged area,SPATIAL_OPERATION,528bfdde300a5699,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"100 item(s): Ahrensfelde, Altlandsberg, Angermünde, Anklam, Bad Doberan, Bad Freienwalde, Bad Liebenwerda, Barth, Beelitz, Belzig …",correct,"
+SELECT city_name, ST_AsText(centroid) AS point
+FROM cities
+WHERE ST_Within(centroid, ST_Union(ARRAY[{state:Brandenburg}, {state:Mecklenburg-Vorpommern}]))
+ORDER BY city_name
+","city_name,point,db / Ahrensfelde,POINT(13.5753 52.5762),""Agent-001, Agent-002"" / Angermünde,POINT(14 53.0333),""Agent-001, Agent-002"" / Anklam,POINT(13.6833 53.85),""Agent-001, Agent-002"" / Bad Doberan,POINT(11.8986 54.1065),""Agent-001, Agent-002"" / Bad Freienwalde,POINT(14.0325 52.7856),""Agent-001, Agent-002"" / Barth,POINT(12.7266 54.3687),""Agent-001, Agent-002"" / Beelitz,POINT(12.9667 52.2333),""Agent-001, Agent-002"" / Belzig,POINT(12.5956 52.1422),""Agent-001, Agent-002"" / Bergen,POINT(13.4333 54.4167),""Agent-001, Agent-002"" / Bestensee,POINT(13.6307 52.234),""Agent-001, Agent-002"" / Cottbus,POINT(14.3319 51.7608),""Agent-001, Agent-002"" / Doberlug-Kirchhain,POINT(13.5629 51.6374),""Agent-001, Agent-002"" / Eisenhüttenstadt,POINT(14.63 52.1465),""Agent-001, Agent-002"" / Fehrbellin,POINT(12.7661 52.8144),""Agent-001, Agent-002"" / Frankfurt (Oder),POINT(14.5517 52.3421),""Agent-001, Agent-002"" / Greifswald,POINT(13.3833 54.0833),""Agent-001, Agent-002"" / Großbeeren,POINT(13.3079 52.3551),""Agent-001, Agent-002"" / Grünheide,POINT(13.8228 52.4255),""Agent-001, Agent-002"" / Güstrow,POINT(12.1764 53.7939),""Agent-001, Agent-002"" / Königs Wusterhausen,POINT(13.625 52.2917),""Agent-001, Agent-002"" / Kyritz,POINT(12.3972 52.9422),""Agent-001, Agent-002"" / Lübbenau/Spreewald,POINT(13.9688 51.8679),""Agent-001, Agent-002"" / Ludwigsfelde,POINT(13.2667 52.2997),""Agent-001, Agent-002"" / Michendorf,POINT(13.0292 52.3129),""Agent-001, Agent-002"" / Mittenwalde,POINT(13.5333 52.2667),""Agent-001, Agent-002"" / Nauen,POINT(12.8831 52.6),""Agent-001, Agent-002"" / Neubrandenburg,POINT(13.2608 53.5569),""Agent-001, Agent-002"" / Neuruppin,POINT(12.8 52.9222),""Agent-001, Agent-002"" / Neustrelitz,POINT(13.0636 53.3647),""Agent-001, Agent-002"" / Oranienburg,POINT(13.2369 52.7544),""Agent-001, Agent-002""","100 cities, same as the SQL.",2026-11-07T13:49:44
+t045,Which cities remain in Brandenburg after Berlin is cut out?,SPATIAL_OPERATION,2c8e3d5ff13c0551,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"75 item(s): Ahrensfelde, Altlandsberg, Angermünde, Bad Freienwalde, Bad Liebenwerda, Beelitz, Belzig, Bestensee, Blankenfelde, Brandenburg …",correct,"
+SELECT city_name, ST_AsText(centroid) AS point
+FROM cities
+WHERE ST_Within(centroid, ST_Difference({state:Brandenburg}, {state:Berlin}))
+ORDER BY city_name
+","city_name,point,db / Ahrensfelde,POINT(13.5753 52.5762),""Agent-001, Agent-002"" / Angermünde,POINT(14 53.0333),""Agent-001, Agent-002"" / Bad Freienwalde,POINT(14.0325 52.7856),""Agent-001, Agent-002"" / Beelitz,POINT(12.9667 52.2333),""Agent-001, Agent-002"" / Belzig,POINT(12.5956 52.1422),""Agent-001, Agent-002"" / Bestensee,POINT(13.6307 52.234),""Agent-001, Agent-002"" / Cottbus,POINT(14.3319 51.7608),""Agent-001, Agent-002"" / Doberlug-Kirchhain,POINT(13.5629 51.6374),""Agent-001, Agent-002"" / Eisenhüttenstadt,POINT(14.63 52.1465),""Agent-001, Agent-002"" / Fehrbellin,POINT(12.7661 52.8144),""Agent-001, Agent-002"" / Frankfurt (Oder),POINT(14.5517 52.3421),""Agent-001, Agent-002"" / Großbeeren,POINT(13.3079 52.3551),""Agent-001, Agent-002"" / Grünheide,POINT(13.8228 52.4255),""Agent-001, Agent-002"" / Königs Wusterhausen,POINT(13.625 52.2917),""Agent-001, Agent-002"" / Kyritz,POINT(12.3972 52.9422),""Agent-001, Agent-002"" / Lübbenau/Spreewald,POINT(13.9688 51.8679),""Agent-001, Agent-002"" / Ludwigsfelde,POINT(13.2667 52.2997),""Agent-001, Agent-002"" / Michendorf,POINT(13.0292 52.3129),""Agent-001, Agent-002"" / Mittenwalde,POINT(13.5333 52.2667),""Agent-001, Agent-002"" / Nauen,POINT(12.8831 52.6),""Agent-001, Agent-002"" / Neuruppin,POINT(12.8 52.9222),""Agent-001, Agent-002"" / Oranienburg,POINT(13.2369 52.7544),""Agent-001, Agent-002"" / Perleberg,POINT(11.8667 53.0667),""Agent-001, Agent-002"" / Potsdam,POINT(13.0667 52.4),""Agent-001, Agent-002"" / Pritzwalk,POINT(12.1831 53.1497),""Agent-001, Agent-002"" / Rangsdorf,POINT(13.4331 52.2831),""Agent-001, Agent-002"" / Rathenow,POINT(12.3333 52.6),""Agent-001, Agent-002"" / Schönwalde-Siedlung,POINT(12.9833 52.65),""Agent-001, Agent-002"" / Spremberg,POINT(14.3794 51.5717),""Agent-001, Agent-002"" / Strausberg,POINT(13.8817 52.5775),""Agent-001, Agent-002""","75 cities, same as the SQL. Agent-001 needed 2 KQML turns: Berlin's shape, then the spatial query.",2026-11-07T13:50:15
+t046,Merge Schleswig-Holstein and Hamburg into one area and tell me the population of that area in 2019,SPATIAL_OPERATION,f75d7f7da5c083ec,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"2 item(s): Hamburg 2019, Schleswig-Holstein 2019",correct,"
+-- union of Schleswig-Holstein, Hamburg
+SELECT ST_GeometryType(g) AS type, NULLIF((SELECT COUNT(DISTINCT (ROUND(ST_X((p).geom)::numeric, 5), ROUND(ST_Y((p).geom)::numeric, 5)))
+               FROM ST_DumpPoints(g) p), 0) AS vertices,
+       ROUND((ST_Area(g::geography) / 1e6)::numeric) AS area_km2
+FROM (SELECT ST_Union(ARRAY[{state:Schleswig-Holstein}, {state:Hamburg}]) AS g) x;
+
+SELECT s.state_name, d.stat_year, d.population
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Schleswig-Holstein', 'Hamburg')
+  AND d.stat_year IN (2019)
+ORDER BY s.state_name, d.stat_year
+","type,vertices,area_km2,db / ST_MultiPolygon,28011,16420,""Agent-001, Agent-002"" || state_name,stat_year,population,db / Schleswig-Holstein,2019,2903773,Agent-001 / Hamburg,2019,1847253,Agent-002","Total 4,751,026 = Hamburg 1,847,253 + Schleswig-Holstein 2,903,773; each agent got the
+missing value from the other via KQML.",2026-11-07T13:50:42
+t047,Join Sachsen and Sachsen-Anhalt into one shape and give me the total live births for 2016,SPATIAL_OPERATION,8f87969fbce8c86a,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),partial-complete,"2 item(s): Sachsen-Anhalt 2016, Sachsen 2016",correct,"
+-- union of Sachsen, Sachsen-Anhalt
+SELECT ST_GeometryType(g) AS type, NULLIF((SELECT COUNT(DISTINCT (ROUND(ST_X((p).geom)::numeric, 5), ROUND(ST_Y((p).geom)::numeric, 5)))
+               FROM ST_DumpPoints(g) p), 0) AS vertices,
+       ROUND((ST_Area(g::geography) / 1e6)::numeric) AS area_km2
+FROM (SELECT ST_Union(ARRAY[{state:Sachsen}, {state:Sachsen-Anhalt}]) AS g) x;
+
+SELECT s.state_name, d.stat_year, d.live_births
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Sachsen', 'Sachsen-Anhalt')
+  AND d.stat_year IN (2016)
+ORDER BY s.state_name, d.stat_year
+","type,vertices,area_km2,db / ST_Polygon,3370,39021,""Agent-001, Agent-002"" || state_name,stat_year,live_births,db / Sachsen,2016,,Agent-001 / Sachsen-Anhalt,2016,9335.0,Agent-001","Sachsen 2016 live births are missing in both databases, so partial-complete with total = null
+is correct. Sachsen-Anhalt 9,335 matches.",2026-11-07T13:51:08
+t048,Which cities are within 25 km of Erfurt?,SPATIAL_RELATIONSHIP_BUFFER,a8794eb41617229b,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"4 item(s): Arnstadt, Gotha, Sömmerda, Weimar",correct,"
+SELECT city_name, ST_AsText(centroid) AS point
+FROM cities
+WHERE ST_DWithin(centroid::geography, {city:Erfurt}::geography, 25000)
+  AND city_name <> 'Erfurt'
+ORDER BY city_name
+","city_name,point,db / Weimar,POINT(11.3294 50.9811),""Agent-001, Agent-002"" / Arnstadt,POINT(10.9464 50.8342),Agent-002 / Gotha,POINT(10.7183 50.9489),Agent-002 / Sömmerda,POINT(11.1169 51.1617),Agent-002",,2026-11-07T13:51:43
+t050,What cities lie within 10 km of Potsdam?,SPATIAL_RELATIONSHIP_BUFFER,805bb1b1e3bbf828,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Werder,correct,"
+SELECT city_name, ST_AsText(centroid) AS point
+FROM cities
+WHERE ST_DWithin(centroid::geography, {city:Potsdam}::geography, 10000)
+  AND city_name <> 'Potsdam'
+ORDER BY city_name
+","city_name,point,db / Werder,POINT(12.935 52.3781),Agent-002",,2026-11-07T13:52:03
+t051,Which cities lie north of Baden-Württemberg?,SPATIAL_RELATIONSHIP_BUFFER,705c1116a746d15d,20,GPT-4o mini / A2 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A2 (5),complete,"1195 item(s): Aachen, Achim, Adelsdorf, Adendorf, Aerzen, Ahaus, Ahlen, Ahrensburg, Ahrensbök, Ahrensfelde …",correct,"
+SELECT city_name, ST_AsText(centroid) AS point
+FROM cities
+WHERE ST_Y(centroid) > ST_YMax({state:Baden-Württemberg})
+ORDER BY city_name
+","city_name,point,db / Aachen,POINT(6.0838 50.7762),""Agent-001, Agent-002"" / Achim,POINT(9.033 53.013),""Agent-001, Agent-002"" / Aerzen,POINT(9.2638 52.0496),""Agent-001, Agent-002"" / Ahlen,POINT(7.8911 51.7633),""Agent-001, Agent-002"" / Ahrensfelde,POINT(13.5753 52.5762),""Agent-001, Agent-002"" / Aldenhoven,POINT(6.2831 50.8958),""Agent-001, Agent-002"" / Alsfeld,POINT(9.2711 50.7511),""Agent-001, Agent-002"" / Altenberge,POINT(7.4653 52.0458),""Agent-001, Agent-002"" / Altenburg,POINT(12.4333 50.985),""Agent-001, Agent-002"" / Andernach,POINT(7.4017 50.4397),""Agent-001, Agent-002"" / Angermünde,POINT(14 53.0333),""Agent-001, Agent-002"" / Anklam,POINT(13.6833 53.85),""Agent-001, Agent-002"" / Anröchte,POINT(8.3333 51.5667),""Agent-001, Agent-002"" / Apen,POINT(7.8097 53.2214),""Agent-001, Agent-002"" / Apolda,POINT(11.5139 51.0247),""Agent-001, Agent-002"" / Arnsberg,POINT(8.0644 51.3967),""Agent-001, Agent-002"" / Arolsen,POINT(9.0167 51.3778),""Agent-001, Agent-002"" / Asleben,POINT(11.55 51.5167),""Agent-001, Agent-002"" / Attendorn,POINT(7.9033 51.1264),""Agent-001, Agent-002"" / Aue,POINT(12.7008 50.5853),""Agent-001, Agent-002"" / Augustdorf,POINT(8.7317 51.9094),""Agent-001, Agent-002"" / Aurich,POINT(7.4836 53.4714),""Agent-001, Agent-002"" / Bad Bentheim,POINT(7.1597 52.3031),""Agent-001, Agent-002"" / Bad Bevensen,POINT(10.5833 53.0792),""Agent-001, Agent-002"" / Bad Bramstedt,POINT(9.8844 53.9186),""Agent-001, Agent-002"" / Bad Breisig,POINT(7.2964 50.5092),""Agent-001, Agent-002"" / Bad Doberan,POINT(11.8986 54.1065),""Agent-001, Agent-002"" / Bad Dürrenberg,POINT(12.0658 51.2955),""Agent-001, Agent-002"" / Bad Frankenhausen,POINT(11.1011 51.3558),""Agent-001, Agent-002"" / Bad Freienwalde,POINT(14.0325 52.7856),""Agent-001, Agent-002""","The system defines 'north' as a direction sector, not the bounding box of the check SQL,
+so I compare the answers with each other.
+Answer 1 (all models on Agent-002, 1195 cities): complete.
+Answer 2 (GPT/Claude on Agent-001, 1190): misses Essen, Münster, Coswig, Gronau, Petersberg -
+the KQML exclude list holds names only, so same-name cities in Agent-001 hid them.
+Answer 3 (Qwen on Agent-001, 606): the peer answered HTTP 500 three times, half the cities are
+missing, yet the status says complete.",2026-11-07T13:52:34
+t051,Which cities lie north of Baden-Württemberg?,SPATIAL_RELATIONSHIP_BUFFER,da01be4806ee5c34,10,GPT-4o mini / A1 (5); Claude Haiku 5.5 / A1 (5),complete,"1190 item(s): Aachen, Achim, Adelsdorf, Adendorf, Aerzen, Ahaus, Ahlen, Ahrensburg, Ahrensbök, Ahrensfelde …",partly,"
+SELECT city_name, ST_AsText(centroid) AS point
+FROM cities
+WHERE ST_Y(centroid) > ST_YMax({state:Baden-Württemberg})
+ORDER BY city_name
+","city_name,point,db / Aachen,POINT(6.0838 50.7762),""Agent-001, Agent-002"" / Achim,POINT(9.033 53.013),""Agent-001, Agent-002"" / Aerzen,POINT(9.2638 52.0496),""Agent-001, Agent-002"" / Ahlen,POINT(7.8911 51.7633),""Agent-001, Agent-002"" / Ahrensfelde,POINT(13.5753 52.5762),""Agent-001, Agent-002"" / Aldenhoven,POINT(6.2831 50.8958),""Agent-001, Agent-002"" / Alsfeld,POINT(9.2711 50.7511),""Agent-001, Agent-002"" / Altenberge,POINT(7.4653 52.0458),""Agent-001, Agent-002"" / Altenburg,POINT(12.4333 50.985),""Agent-001, Agent-002"" / Andernach,POINT(7.4017 50.4397),""Agent-001, Agent-002"" / Angermünde,POINT(14 53.0333),""Agent-001, Agent-002"" / Anklam,POINT(13.6833 53.85),""Agent-001, Agent-002"" / Anröchte,POINT(8.3333 51.5667),""Agent-001, Agent-002"" / Apen,POINT(7.8097 53.2214),""Agent-001, Agent-002"" / Apolda,POINT(11.5139 51.0247),""Agent-001, Agent-002"" / Arnsberg,POINT(8.0644 51.3967),""Agent-001, Agent-002"" / Arolsen,POINT(9.0167 51.3778),""Agent-001, Agent-002"" / Asleben,POINT(11.55 51.5167),""Agent-001, Agent-002"" / Attendorn,POINT(7.9033 51.1264),""Agent-001, Agent-002"" / Aue,POINT(12.7008 50.5853),""Agent-001, Agent-002"" / Augustdorf,POINT(8.7317 51.9094),""Agent-001, Agent-002"" / Aurich,POINT(7.4836 53.4714),""Agent-001, Agent-002"" / Bad Bentheim,POINT(7.1597 52.3031),""Agent-001, Agent-002"" / Bad Bevensen,POINT(10.5833 53.0792),""Agent-001, Agent-002"" / Bad Bramstedt,POINT(9.8844 53.9186),""Agent-001, Agent-002"" / Bad Breisig,POINT(7.2964 50.5092),""Agent-001, Agent-002"" / Bad Doberan,POINT(11.8986 54.1065),""Agent-001, Agent-002"" / Bad Dürrenberg,POINT(12.0658 51.2955),""Agent-001, Agent-002"" / Bad Frankenhausen,POINT(11.1011 51.3558),""Agent-001, Agent-002"" / Bad Freienwalde,POINT(14.0325 52.7856),""Agent-001, Agent-002""","The system defines 'north' as a direction sector, not the bounding box of the check SQL,
+so I compare the answers with each other.
+Answer 1 (all models on Agent-002, 1195 cities): complete.
+Answer 2 (GPT/Claude on Agent-001, 1190): misses Essen, Münster, Coswig, Gronau, Petersberg -
+the KQML exclude list holds names only, so same-name cities in Agent-001 hid them.
+Answer 3 (Qwen on Agent-001, 606): the peer answered HTTP 500 three times, half the cities are
+missing, yet the status says complete.",2026-11-07T13:52:34
+t051,Which cities lie north of Baden-Württemberg?,SPATIAL_RELATIONSHIP_BUFFER,fe0e276e74ed84c0,10,Qwen3-8B / A1 (5); Qwen3-8B + QLoRA / A1 (5),complete,"606 item(s): Aachen, Achim, Adelsdorf, Aerzen, Ahlen, Ahrensfelde, Aldenhoven, Alsfeld, Altenberge, Altenburg …",wrong,"
+SELECT city_name, ST_AsText(centroid) AS point
+FROM cities
+WHERE ST_Y(centroid) > ST_YMax({state:Baden-Württemberg})
+ORDER BY city_name
+","city_name,point,db / Aachen,POINT(6.0838 50.7762),""Agent-001, Agent-002"" / Achim,POINT(9.033 53.013),""Agent-001, Agent-002"" / Aerzen,POINT(9.2638 52.0496),""Agent-001, Agent-002"" / Ahlen,POINT(7.8911 51.7633),""Agent-001, Agent-002"" / Ahrensfelde,POINT(13.5753 52.5762),""Agent-001, Agent-002"" / Aldenhoven,POINT(6.2831 50.8958),""Agent-001, Agent-002"" / Alsfeld,POINT(9.2711 50.7511),""Agent-001, Agent-002"" / Altenberge,POINT(7.4653 52.0458),""Agent-001, Agent-002"" / Altenburg,POINT(12.4333 50.985),""Agent-001, Agent-002"" / Andernach,POINT(7.4017 50.4397),""Agent-001, Agent-002"" / Angermünde,POINT(14 53.0333),""Agent-001, Agent-002"" / Anklam,POINT(13.6833 53.85),""Agent-001, Agent-002"" / Anröchte,POINT(8.3333 51.5667),""Agent-001, Agent-002"" / Apen,POINT(7.8097 53.2214),""Agent-001, Agent-002"" / Apolda,POINT(11.5139 51.0247),""Agent-001, Agent-002"" / Arnsberg,POINT(8.0644 51.3967),""Agent-001, Agent-002"" / Arolsen,POINT(9.0167 51.3778),""Agent-001, Agent-002"" / Asleben,POINT(11.55 51.5167),""Agent-001, Agent-002"" / Attendorn,POINT(7.9033 51.1264),""Agent-001, Agent-002"" / Aue,POINT(12.7008 50.5853),""Agent-001, Agent-002"" / Augustdorf,POINT(8.7317 51.9094),""Agent-001, Agent-002"" / Aurich,POINT(7.4836 53.4714),""Agent-001, Agent-002"" / Bad Bentheim,POINT(7.1597 52.3031),""Agent-001, Agent-002"" / Bad Bevensen,POINT(10.5833 53.0792),""Agent-001, Agent-002"" / Bad Bramstedt,POINT(9.8844 53.9186),""Agent-001, Agent-002"" / Bad Breisig,POINT(7.2964 50.5092),""Agent-001, Agent-002"" / Bad Doberan,POINT(11.8986 54.1065),""Agent-001, Agent-002"" / Bad Dürrenberg,POINT(12.0658 51.2955),""Agent-001, Agent-002"" / Bad Frankenhausen,POINT(11.1011 51.3558),""Agent-001, Agent-002"" / Bad Freienwalde,POINT(14.0325 52.7856),""Agent-001, Agent-002""","The system defines 'north' as a direction sector, not the bounding box of the check SQL,
+so I compare the answers with each other.
+Answer 1 (all models on Agent-002, 1195 cities): complete.
+Answer 2 (GPT/Claude on Agent-001, 1190): misses Essen, Münster, Coswig, Gronau, Petersberg -
+the KQML exclude list holds names only, so same-name cities in Agent-001 hid them.
+Answer 3 (Qwen on Agent-001, 606): the peer answered HTTP 500 three times, half the cities are
+missing, yet the status says complete.",2026-11-07T13:52:34
+t052,Which towns are near Kassel?,SPATIAL_RELATIONSHIP_BUFFER,2003cae06a8df352,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"147 item(s): Aerzen, Alfeld, Alsfeld, Altenbeken, Anröchte, Arolsen, Augustdorf, Bad Berleburg, Bad Driburg, Bad Gandersheim …",correct,"
+SELECT city_name, ST_AsText(centroid) AS point,
+       ROUND((ST_Distance(centroid::geography, {city:Kassel}::geography) / 1000)::numeric, 1) AS km
+FROM cities
+WHERE ST_DWithin(centroid::geography, {city:Kassel}::geography, 100000)
+  AND city_name <> 'Kassel'
+ORDER BY km
+","city_name,point,km,db / Kaufungen,POINT(9.6186 51.2811),9.3,""Agent-001, Agent-002"" / Hannoversch Münden,POINT(9.65 51.4167),15.4,""Agent-001, Agent-002"" / Gudensberg,POINT(9.3575 51.1762),18.4,""Agent-001, Agent-002"" / Felsberg,POINT(9.4215 51.1346),20.9,""Agent-001, Agent-002"" / Wolfhagen,POINT(9.1709 51.3272),22.8,""Agent-001, Agent-002"" / Witzenhausen,POINT(9.8569 51.3417),25.2,""Agent-001, Agent-002"" / Fritzlar,POINT(9.2667 51.1333),25.9,""Agent-001, Agent-002"" / Warburg,POINT(9.14 51.4881),31.4,""Agent-001, Agent-002"" / Borken,POINT(9.2793 51.0491),33.4,""Agent-001, Agent-002"" / Arolsen,POINT(9.0167 51.3778),34.2,""Agent-001, Agent-002"" / Rosdorf,POINT(9.9 51.5),34.7,""Agent-001, Agent-002"" / Göttingen,POINT(9.9356 51.5339),38.9,""Agent-001, Agent-002"" / Rotenburg an der Fulda,POINT(9.7272 50.995),39.1,""Agent-001, Agent-002"" / Beverungen,POINT(9.3725 51.6628),39.6,""Agent-001, Agent-002"" / Eschwege,POINT(10.0528 51.1881),41.3,""Agent-001, Agent-002"" / Korbach,POINT(8.8731 51.2719),43.9,""Agent-001, Agent-002"" / Nörten-Hardenberg,POINT(9.9359 51.6288),46.2,""Agent-001, Agent-002"" / Brakel,POINT(9.1833 51.7167),49.7,""Agent-001, Agent-002"" / Schwalmstadt,POINT(9.1889 50.9128),49.8,""Agent-001, Agent-002"" / Höxter,POINT(9.3667 51.7667),51.0,""Agent-001, Agent-002"" / Bad Hersfeld,POINT(9.7067 50.8683),51.9,""Agent-001, Agent-002"" / Lichtenau,POINT(8.8947 51.6158),53.6,""Agent-001, Agent-002"" / Northeim,POINT(10.0011 51.7067),55.8,""Agent-001, Agent-002"" / Frankenberg,POINT(8.7967 51.0589),56.7,""Agent-001, Agent-002"" / Holzminden,POINT(9.4483 51.8297),57.3,""Agent-001, Agent-002"" / Duderstadt,POINT(10.2597 51.5125),57.3,""Agent-001, Agent-002"" / Dingelstädt,POINT(10.3194 51.3156),57.3,""Agent-001, Agent-002"" / Neustadt,POINT(9.1167 50.85),58.3,""Agent-001, Agent-002"" / Stadtallendorf,POINT(9.0167 50.8333),63.4,""Agent-001, Agent-002"" / Alsfeld,POINT(9.2711 50.7511),64.8,""Agent-001, Agent-002""","The system used 100 km for 'near'. 147 of the 148 cities within 100 km: Bad Salzuflen
+(99.95 km) is lost because the circle is drawn as a 32-sided polygon. Acceptable.",2026-11-07T13:53:00
+t053,What cities are south of Niedersachsen?,SPATIAL_RELATIONSHIP_BUFFER,162f5b5966c91550,10,Qwen3-8B / A1 (5); Qwen3-8B + QLoRA / A1 (5),complete,"528 item(s): Aalen, Abensberg, Achern, Adelsdorf, Ahlen, Aichach, Ainring, Alsfeld, Altensteig, Altötting …",wrong,"
+SELECT city_name, ST_AsText(centroid) AS point
+FROM cities
+WHERE ST_Y(centroid) < ST_YMin({state:Niedersachsen})
+ORDER BY city_name
+","city_name,point,db / Aachen,POINT(6.0838 50.7762),""Agent-001, Agent-002"" / Aalen,POINT(10.0936 48.8372),""Agent-001, Agent-002"" / Abensberg,POINT(11.8498 48.8168),""Agent-001, Agent-002"" / Achern,POINT(8.0739 48.6314),""Agent-001, Agent-002"" / Adelsdorf,POINT(10.8935 49.7112),""Agent-001, Agent-002"" / Aichach,POINT(11.1333 48.45),""Agent-001, Agent-002"" / Ainring,POINT(12.9519 47.8142),""Agent-001, Agent-002"" / Aldenhoven,POINT(6.2831 50.8958),""Agent-001, Agent-002"" / Alsfeld,POINT(9.2711 50.7511),""Agent-001, Agent-002"" / Altenburg,POINT(12.4333 50.985),""Agent-001, Agent-002"" / Altensteig,POINT(8.6047 48.5864),""Agent-001, Agent-002"" / Altötting,POINT(12.6759 48.2264),""Agent-001, Agent-002"" / Andernach,POINT(7.4017 50.4397),""Agent-001, Agent-002"" / Apolda,POINT(11.5139 51.0247),""Agent-001, Agent-002"" / Appenweier,POINT(7.98 48.5397),""Agent-001, Agent-002"" / Asperg,POINT(9.1414 48.9064),""Agent-001, Agent-002"" / Attendorn,POINT(7.9033 51.1264),""Agent-001, Agent-002"" / Aue,POINT(12.7008 50.5853),""Agent-001, Agent-002"" / Augsburg,POINT(10.8978 48.3689),""Agent-001, Agent-002"" / Aulendorf,POINT(9.6389 47.9542),""Agent-001, Agent-002"" / Bad Aibling,POINT(12.01 47.8639),""Agent-001, Agent-002"" / Bad Breisig,POINT(7.2964 50.5092),""Agent-001, Agent-002"" / Bad Dürrenberg,POINT(12.0658 51.2955),""Agent-001, Agent-002"" / Bad Feilnbach,POINT(12.0071 47.7747),""Agent-001, Agent-002"" / Bad Hersfeld,POINT(9.7067 50.8683),""Agent-001, Agent-002"" / Bad Homburg,POINT(8.6105 50.2292),""Agent-001, Agent-002"" / Bad Honnef am Rhein,POINT(7.2269 50.645),""Agent-001, Agent-002"" / Bad König,POINT(9.0071 49.7413),""Agent-001, Agent-002"" / Bad Laasphe,POINT(8.4167 50.9303),""Agent-001, Agent-002"" / Bad Liebenzell,POINT(8.7314 48.7742),""Agent-001, Agent-002""","Same pattern as Q49.
+Answer 1 (Agent-002, 1075 cities): complete.
+Answer 2 (Qwen on Agent-001, 528): the peer answered HTTP 500 three times; status still complete.
+Answer 3 (GPT/Claude on Agent-001, 1069): misses Brühl, Fürth, Neunkirchen, Sulzbach, Taufkirchen,
+Weingarten - same-name cities excluded by name in the KQML ask.",2026-11-07T13:53:25
+t053,What cities are south of Niedersachsen?,SPATIAL_RELATIONSHIP_BUFFER,5976ffa8fa3ce7c1,20,GPT-4o mini / A2 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A2 (5),complete,"1075 item(s): Aalen, Abensberg, Achern, Adelsdorf, Ahlen, Aich, Aichach, Aidlingen, Ainring, Albstadt …",correct,"
+SELECT city_name, ST_AsText(centroid) AS point
+FROM cities
+WHERE ST_Y(centroid) < ST_YMin({state:Niedersachsen})
+ORDER BY city_name
+","city_name,point,db / Aachen,POINT(6.0838 50.7762),""Agent-001, Agent-002"" / Aalen,POINT(10.0936 48.8372),""Agent-001, Agent-002"" / Abensberg,POINT(11.8498 48.8168),""Agent-001, Agent-002"" / Achern,POINT(8.0739 48.6314),""Agent-001, Agent-002"" / Adelsdorf,POINT(10.8935 49.7112),""Agent-001, Agent-002"" / Aichach,POINT(11.1333 48.45),""Agent-001, Agent-002"" / Ainring,POINT(12.9519 47.8142),""Agent-001, Agent-002"" / Aldenhoven,POINT(6.2831 50.8958),""Agent-001, Agent-002"" / Alsfeld,POINT(9.2711 50.7511),""Agent-001, Agent-002"" / Altenburg,POINT(12.4333 50.985),""Agent-001, Agent-002"" / Altensteig,POINT(8.6047 48.5864),""Agent-001, Agent-002"" / Altötting,POINT(12.6759 48.2264),""Agent-001, Agent-002"" / Andernach,POINT(7.4017 50.4397),""Agent-001, Agent-002"" / Apolda,POINT(11.5139 51.0247),""Agent-001, Agent-002"" / Appenweier,POINT(7.98 48.5397),""Agent-001, Agent-002"" / Asperg,POINT(9.1414 48.9064),""Agent-001, Agent-002"" / Attendorn,POINT(7.9033 51.1264),""Agent-001, Agent-002"" / Aue,POINT(12.7008 50.5853),""Agent-001, Agent-002"" / Augsburg,POINT(10.8978 48.3689),""Agent-001, Agent-002"" / Aulendorf,POINT(9.6389 47.9542),""Agent-001, Agent-002"" / Bad Aibling,POINT(12.01 47.8639),""Agent-001, Agent-002"" / Bad Breisig,POINT(7.2964 50.5092),""Agent-001, Agent-002"" / Bad Dürrenberg,POINT(12.0658 51.2955),""Agent-001, Agent-002"" / Bad Feilnbach,POINT(12.0071 47.7747),""Agent-001, Agent-002"" / Bad Hersfeld,POINT(9.7067 50.8683),""Agent-001, Agent-002"" / Bad Homburg,POINT(8.6105 50.2292),""Agent-001, Agent-002"" / Bad Honnef am Rhein,POINT(7.2269 50.645),""Agent-001, Agent-002"" / Bad König,POINT(9.0071 49.7413),""Agent-001, Agent-002"" / Bad Laasphe,POINT(8.4167 50.9303),""Agent-001, Agent-002"" / Bad Liebenzell,POINT(8.7314 48.7742),""Agent-001, Agent-002""","Same pattern as Q49.
+Answer 1 (Agent-002, 1075 cities): complete.
+Answer 2 (Qwen on Agent-001, 528): the peer answered HTTP 500 three times; status still complete.
+Answer 3 (GPT/Claude on Agent-001, 1069): misses Brühl, Fürth, Neunkirchen, Sulzbach, Taufkirchen,
+Weingarten - same-name cities excluded by name in the KQML ask.",2026-11-07T13:53:25
+t053,What cities are south of Niedersachsen?,SPATIAL_RELATIONSHIP_BUFFER,8f900f58664bd83c,10,GPT-4o mini / A1 (5); Claude Haiku 5.5 / A1 (5),complete,"1069 item(s): Aalen, Abensberg, Achern, Adelsdorf, Ahlen, Aich, Aichach, Aidlingen, Ainring, Albstadt …",partly,"
+SELECT city_name, ST_AsText(centroid) AS point
+FROM cities
+WHERE ST_Y(centroid) < ST_YMin({state:Niedersachsen})
+ORDER BY city_name
+","city_name,point,db / Aachen,POINT(6.0838 50.7762),""Agent-001, Agent-002"" / Aalen,POINT(10.0936 48.8372),""Agent-001, Agent-002"" / Abensberg,POINT(11.8498 48.8168),""Agent-001, Agent-002"" / Achern,POINT(8.0739 48.6314),""Agent-001, Agent-002"" / Adelsdorf,POINT(10.8935 49.7112),""Agent-001, Agent-002"" / Aichach,POINT(11.1333 48.45),""Agent-001, Agent-002"" / Ainring,POINT(12.9519 47.8142),""Agent-001, Agent-002"" / Aldenhoven,POINT(6.2831 50.8958),""Agent-001, Agent-002"" / Alsfeld,POINT(9.2711 50.7511),""Agent-001, Agent-002"" / Altenburg,POINT(12.4333 50.985),""Agent-001, Agent-002"" / Altensteig,POINT(8.6047 48.5864),""Agent-001, Agent-002"" / Altötting,POINT(12.6759 48.2264),""Agent-001, Agent-002"" / Andernach,POINT(7.4017 50.4397),""Agent-001, Agent-002"" / Apolda,POINT(11.5139 51.0247),""Agent-001, Agent-002"" / Appenweier,POINT(7.98 48.5397),""Agent-001, Agent-002"" / Asperg,POINT(9.1414 48.9064),""Agent-001, Agent-002"" / Attendorn,POINT(7.9033 51.1264),""Agent-001, Agent-002"" / Aue,POINT(12.7008 50.5853),""Agent-001, Agent-002"" / Augsburg,POINT(10.8978 48.3689),""Agent-001, Agent-002"" / Aulendorf,POINT(9.6389 47.9542),""Agent-001, Agent-002"" / Bad Aibling,POINT(12.01 47.8639),""Agent-001, Agent-002"" / Bad Breisig,POINT(7.2964 50.5092),""Agent-001, Agent-002"" / Bad Dürrenberg,POINT(12.0658 51.2955),""Agent-001, Agent-002"" / Bad Feilnbach,POINT(12.0071 47.7747),""Agent-001, Agent-002"" / Bad Hersfeld,POINT(9.7067 50.8683),""Agent-001, Agent-002"" / Bad Homburg,POINT(8.6105 50.2292),""Agent-001, Agent-002"" / Bad Honnef am Rhein,POINT(7.2269 50.645),""Agent-001, Agent-002"" / Bad König,POINT(9.0071 49.7413),""Agent-001, Agent-002"" / Bad Laasphe,POINT(8.4167 50.9303),""Agent-001, Agent-002"" / Bad Liebenzell,POINT(8.7314 48.7742),""Agent-001, Agent-002""","Same pattern as Q49.
+Answer 1 (Agent-002, 1075 cities): complete.
+Answer 2 (Qwen on Agent-001, 528): the peer answered HTTP 500 three times; status still complete.
+Answer 3 (GPT/Claude on Agent-001, 1069): misses Brühl, Fürth, Neunkirchen, Sulzbach, Taufkirchen,
+Weingarten - same-name cities excluded by name in the KQML ask.",2026-11-07T13:53:25
+t054,List the cities east of Würzburg,SPATIAL_RELATIONSHIP_BUFFER,2ef75041fb67f233,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"221 item(s): Abensberg, Adelsdorf, Ainring, Altdorf, Altenburg, Altötting, Amberg, Annaberg-Buchholz, Ansbach, Aue …",correct,"
+SELECT city_name, ST_AsText(centroid) AS point
+FROM cities
+WHERE ST_X(centroid) > ST_XMax({city:Würzburg})
+ORDER BY city_name
+","city_name,point,db / Aalen,POINT(10.0936 48.8372),""Agent-001, Agent-002"" / Abensberg,POINT(11.8498 48.8168),""Agent-001, Agent-002"" / Adelsdorf,POINT(10.8935 49.7112),""Agent-001, Agent-002"" / Ahrensfelde,POINT(13.5753 52.5762),""Agent-001, Agent-002"" / Aichach,POINT(11.1333 48.45),""Agent-001, Agent-002"" / Ainring,POINT(12.9519 47.8142),""Agent-001, Agent-002"" / Altenburg,POINT(12.4333 50.985),""Agent-001, Agent-002"" / Altötting,POINT(12.6759 48.2264),""Agent-001, Agent-002"" / Angermünde,POINT(14 53.0333),""Agent-001, Agent-002"" / Anklam,POINT(13.6833 53.85),""Agent-001, Agent-002"" / Apolda,POINT(11.5139 51.0247),""Agent-001, Agent-002"" / Asleben,POINT(11.55 51.5167),""Agent-001, Agent-002"" / Aue,POINT(12.7008 50.5853),""Agent-001, Agent-002"" / Augsburg,POINT(10.8978 48.3689),""Agent-001, Agent-002"" / Bad Aibling,POINT(12.01 47.8639),""Agent-001, Agent-002"" / Bad Bevensen,POINT(10.5833 53.0792),""Agent-001, Agent-002"" / Bad Doberan,POINT(11.8986 54.1065),""Agent-001, Agent-002"" / Bad Dürrenberg,POINT(12.0658 51.2955),""Agent-001, Agent-002"" / Bad Feilnbach,POINT(12.0071 47.7747),""Agent-001, Agent-002"" / Bad Frankenhausen,POINT(11.1011 51.3558),""Agent-001, Agent-002"" / Bad Freienwalde,POINT(14.0325 52.7856),""Agent-001, Agent-002"" / Bad Oldesloe,POINT(10.3742 53.8117),""Agent-001, Agent-002"" / Bad Reichenhall,POINT(12.8769 47.7247),""Agent-001, Agent-002"" / Bad Salzungen,POINT(10.2333 50.8117),""Agent-001, Agent-002"" / Bad Schwartau,POINT(10.6975 53.9194),""Agent-001, Agent-002"" / Bad Wörishofen,POINT(10.5969 48.0058),""Agent-001, Agent-002"" / Ballenstedt,POINT(11.2375 51.72),""Agent-001, Agent-002"" / Bannewitz,POINT(13.7167 50.9931),""Agent-001, Agent-002"" / Bargteheide,POINT(10.2608 53.7286),""Agent-001, Agent-002"" / Barth,POINT(12.7266 54.3687),""Agent-001, Agent-002""","East = direction sector 45-135° from Würzburg, not the bounding box of the check SQL.
+All 40 asks agree.",2026-11-07T13:53:52
+t055,Cities within 15.5 km of Heidelberg,SPATIAL_RELATIONSHIP_BUFFER,71aa23bb64d8788c,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"19 item(s): Brühl, Dielheim, Dossenheim, Edingen-Neckarhausen, Eppelheim, Heddesheim, Ilvesheim, Ketsch, Ladenburg, Leimen …",correct,"
+SELECT city_name, ST_AsText(centroid) AS point
+FROM cities
+WHERE ST_DWithin(centroid::geography, {city:Heidelberg}::geography, 15500)
+  AND city_name <> 'Heidelberg'
+ORDER BY city_name
+","city_name,point,db / Brühl,POINT(8.5353 49.4),""Agent-001, Agent-002"" / Dielheim,POINT(8.7347 49.2825),""Agent-001, Agent-002"" / Heddesheim,POINT(8.6033 49.5053),""Agent-001, Agent-002"" / Ilvesheim,POINT(8.5675 49.4725),""Agent-001, Agent-002"" / Ketsch,POINT(8.5336 49.3658),""Agent-001, Agent-002"" / Oftersheim,POINT(8.5847 49.3706),""Agent-001, Agent-002"" / Plankstadt,POINT(8.5942 49.3933),""Agent-001, Agent-002"" / Sandhausen,POINT(8.6581 49.3439),""Agent-001, Agent-002"" / Walldorf,POINT(8.65 49.3),""Agent-001, Agent-002"" / Wiesloch,POINT(8.6983 49.2942),""Agent-001, Agent-002"" / Dossenheim,POINT(8.6722 49.4492),Agent-002 / Edingen-Neckarhausen,POINT(8.6094 49.4469),Agent-002 / Eppelheim,POINT(8.6297 49.4011),Agent-002 / Ladenburg,POINT(8.6092 49.4719),Agent-002 / Leimen,POINT(8.6911 49.3481),Agent-002 / Neckargemünd,POINT(8.7975 49.3939),Agent-002 / Nußloch,POINT(8.6939 49.3236),Agent-002 / Schriesheim,POINT(8.6592 49.4736),Agent-002 / Schwetzingen,POINT(8.5667 49.3833),Agent-002",,2026-11-07T13:54:23
+t056,Which cities are in Baden-Württemberg?,SPATIAL_RELATIONSHIP_BUFFER,4e7e0400c67b5ad8,20,GPT-4o mini / A1 (5); Claude Haiku 5.5 / A1 (5); Qwen3-8B / A1 (5); Qwen3-8B + QLoRA / A1 (5),complete,"280 item(s): Aalen, Achern, Aich, Aidlingen, Albstadt, Altensteig, Appenweier, Asperg, Aulendorf, Backnang …",partly,"
+SELECT city_name, ST_AsText(centroid) AS point
+FROM cities
+WHERE ST_Within(centroid, {state:Baden-Württemberg})
+ORDER BY city_name
+","city_name,point,db / Aalen,POINT(10.0936 48.8372),""Agent-001, Agent-002"" / Achern,POINT(8.0739 48.6314),""Agent-001, Agent-002"" / Altensteig,POINT(8.6047 48.5864),""Agent-001, Agent-002"" / Appenweier,POINT(7.98 48.5397),""Agent-001, Agent-002"" / Asperg,POINT(9.1414 48.9064),""Agent-001, Agent-002"" / Aulendorf,POINT(9.6389 47.9542),""Agent-001, Agent-002"" / Bad Liebenzell,POINT(8.7314 48.7742),""Agent-001, Agent-002"" / Bad Mergentheim,POINT(9.7731 49.4908),""Agent-001, Agent-002"" / Bad Rappenau,POINT(9.1028 49.2389),""Agent-001, Agent-002"" / Bad Säckingen,POINT(7.9472 47.5533),""Agent-001, Agent-002"" / Bad Waldsee,POINT(9.7519 47.9211),""Agent-001, Agent-002"" / Bad Wurzach,POINT(9.8994 47.9094),""Agent-001, Agent-002"" / Baiersbronn,POINT(8.3711 48.5058),""Agent-001, Agent-002"" / Beutelsbach,POINT(9.3885 48.8016),""Agent-001, Agent-002"" / Blaubeuren,POINT(9.785 48.4119),""Agent-001, Agent-002"" / Bretten,POINT(8.7061 49.0364),""Agent-001, Agent-002"" / Brühl,POINT(8.5353 49.4),""Agent-001, Agent-002"" / Bühl,POINT(8.135 48.6953),""Agent-001, Agent-002"" / Denkendorf,POINT(9.3175 48.6958),""Agent-001, Agent-002"" / Dielheim,POINT(8.7347 49.2825),""Agent-001, Agent-002"" / Ditzingen,POINT(9.0667 48.8264),""Agent-001, Agent-002"" / Donaueschingen,POINT(8.5033 47.9531),""Agent-001, Agent-002"" / Eberbach,POINT(8.9833 49.4667),""Agent-001, Agent-002"" / Efringen-Kirchen,POINT(7.5658 47.6556),""Agent-001, Agent-002"" / Ehingen an der Donau,POINT(9.7236 48.2833),""Agent-001, Agent-002"" / Ehningen,POINT(8.9403 48.6589),""Agent-001, Agent-002"" / Eislingen,POINT(9.7067 48.6933),""Agent-001, Agent-002"" / Emmendingen,POINT(7.8492 48.1214),""Agent-001, Agent-002"" / Eppingen,POINT(8.9167 49.1333),""Agent-001, Agent-002"" / Ettenheim,POINT(7.8119 48.2556),""Agent-001, Agent-002""","Baden-Württemberg has two cities named Weingarten. Answer 2 (Agent-002, 281) has both.
+Answer 1 (Agent-001, 280) lost Weingarten (8.53 49.05) because the KQML exclude list uses names only.",2026-11-07T13:54:46
+t056,Which cities are in Baden-Württemberg?,SPATIAL_RELATIONSHIP_BUFFER,c1dea570cb6ac648,20,GPT-4o mini / A2 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A2 (5),complete,"281 item(s): Aalen, Achern, Aich, Aidlingen, Albstadt, Altensteig, Appenweier, Asperg, Aulendorf, Backnang …",correct,"
+SELECT city_name, ST_AsText(centroid) AS point
+FROM cities
+WHERE ST_Within(centroid, {state:Baden-Württemberg})
+ORDER BY city_name
+","city_name,point,db / Aalen,POINT(10.0936 48.8372),""Agent-001, Agent-002"" / Achern,POINT(8.0739 48.6314),""Agent-001, Agent-002"" / Altensteig,POINT(8.6047 48.5864),""Agent-001, Agent-002"" / Appenweier,POINT(7.98 48.5397),""Agent-001, Agent-002"" / Asperg,POINT(9.1414 48.9064),""Agent-001, Agent-002"" / Aulendorf,POINT(9.6389 47.9542),""Agent-001, Agent-002"" / Bad Liebenzell,POINT(8.7314 48.7742),""Agent-001, Agent-002"" / Bad Mergentheim,POINT(9.7731 49.4908),""Agent-001, Agent-002"" / Bad Rappenau,POINT(9.1028 49.2389),""Agent-001, Agent-002"" / Bad Säckingen,POINT(7.9472 47.5533),""Agent-001, Agent-002"" / Bad Waldsee,POINT(9.7519 47.9211),""Agent-001, Agent-002"" / Bad Wurzach,POINT(9.8994 47.9094),""Agent-001, Agent-002"" / Baiersbronn,POINT(8.3711 48.5058),""Agent-001, Agent-002"" / Beutelsbach,POINT(9.3885 48.8016),""Agent-001, Agent-002"" / Blaubeuren,POINT(9.785 48.4119),""Agent-001, Agent-002"" / Bretten,POINT(8.7061 49.0364),""Agent-001, Agent-002"" / Brühl,POINT(8.5353 49.4),""Agent-001, Agent-002"" / Bühl,POINT(8.135 48.6953),""Agent-001, Agent-002"" / Denkendorf,POINT(9.3175 48.6958),""Agent-001, Agent-002"" / Dielheim,POINT(8.7347 49.2825),""Agent-001, Agent-002"" / Ditzingen,POINT(9.0667 48.8264),""Agent-001, Agent-002"" / Donaueschingen,POINT(8.5033 47.9531),""Agent-001, Agent-002"" / Eberbach,POINT(8.9833 49.4667),""Agent-001, Agent-002"" / Efringen-Kirchen,POINT(7.5658 47.6556),""Agent-001, Agent-002"" / Ehingen an der Donau,POINT(9.7236 48.2833),""Agent-001, Agent-002"" / Ehningen,POINT(8.9403 48.6589),""Agent-001, Agent-002"" / Eislingen,POINT(9.7067 48.6933),""Agent-001, Agent-002"" / Emmendingen,POINT(7.8492 48.1214),""Agent-001, Agent-002"" / Eppingen,POINT(8.9167 49.1333),""Agent-001, Agent-002"" / Ettenheim,POINT(7.8119 48.2556),""Agent-001, Agent-002""","Baden-Württemberg has two cities named Weingarten. Answer 2 (Agent-002, 281) has both.
+Answer 1 (Agent-001, 280) lost Weingarten (8.53 49.05) because the KQML exclude list uses names only.",2026-11-07T13:54:46
+t057,List all the cities inside Thüringen,SPATIAL_RELATIONSHIP_BUFFER,b89ee1c3b6152d7b,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"44 item(s): Altenburg, Apolda, Arnstadt, Bad Frankenhausen, Bad Langensalza, Bad Salzungen, Bleicherode, Dingelstädt, Eisenach, Eisenberg …",correct,"
+SELECT city_name, ST_AsText(centroid) AS point
+FROM cities
+WHERE ST_Within(centroid, {state:Thüringen})
+ORDER BY city_name
+","city_name,point,db / Altenburg,POINT(12.4333 50.985),""Agent-001, Agent-002"" / Apolda,POINT(11.5139 51.0247),""Agent-001, Agent-002"" / Bad Frankenhausen,POINT(11.1011 51.3558),""Agent-001, Agent-002"" / Bad Salzungen,POINT(10.2333 50.8117),""Agent-001, Agent-002"" / Bleicherode,POINT(10.5727 51.4401),""Agent-001, Agent-002"" / Dingelstädt,POINT(10.3194 51.3156),""Agent-001, Agent-002"" / Eisenberg,POINT(11.9014 50.9681),""Agent-001, Agent-002"" / Erfurt,POINT(11.0328 50.9787),""Agent-001, Agent-002"" / Jena,POINT(11.5864 50.9272),""Agent-001, Agent-002"" / Kurort Steinbach-Hallenberg,POINT(10.5667 50.7006),""Agent-001, Agent-002"" / Mühlhausen,POINT(10.45 51.2167),""Agent-001, Agent-002"" / Neuhaus am Rennweg,POINT(11.1378 50.51),""Agent-001, Agent-002"" / Neustadt,POINT(11.75 50.7333),""Agent-001, Agent-002"" / Pößneck,POINT(11.6 50.7),""Agent-001, Agent-002"" / Schleiz,POINT(11.8167 50.5833),""Agent-001, Agent-002"" / Schmalkalden,POINT(10.45 50.7167),""Agent-001, Agent-002"" / Sonneberg,POINT(11.1667 50.35),""Agent-001, Agent-002"" / Suhl,POINT(10.6931 50.6106),""Agent-001, Agent-002"" / Waltershausen,POINT(10.5558 50.8975),""Agent-001, Agent-002"" / Weimar,POINT(11.3294 50.9811),""Agent-001, Agent-002"" / Zella-Mehlis,POINT(10.6669 50.6597),""Agent-001, Agent-002"" / Zeulenroda,POINT(11.9806 50.6486),""Agent-001, Agent-002"" / Arnstadt,POINT(10.9464 50.8342),Agent-002 / Bad Langensalza,POINT(10.6467 51.1081),Agent-002 / Eisenach,POINT(10.3244 50.9747),Agent-002 / Gera,POINT(12.0824 50.8782),Agent-002 / Gerstungen,POINT(10.0597 50.9625),Agent-002 / Gotha,POINT(10.7183 50.9489),Agent-002 / Greiz,POINT(12.1997 50.6547),Agent-002 / Heilbad Heiligenstadt,POINT(10.1344 51.3775),Agent-002",,2026-11-07T13:55:15
+t058,What cities are located within Schleswig-Holstein?,SPATIAL_RELATIONSHIP_BUFFER,050e316d19ad700f,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"62 item(s): Ahrensburg, Ahrensbök, Altenholz, Bad Bramstedt, Bad Oldesloe, Bad Schwartau, Bad Segeberg, Bargteheide, Barmstedt, Brunsbüttel …",correct,"
+SELECT city_name, ST_AsText(centroid) AS point
+FROM cities
+WHERE ST_Within(centroid, {state:Schleswig-Holstein})
+ORDER BY city_name
+","city_name,point,db / Bad Bramstedt,POINT(9.8844 53.9186),""Agent-001, Agent-002"" / Bad Oldesloe,POINT(10.3742 53.8117),""Agent-001, Agent-002"" / Bad Schwartau,POINT(10.6975 53.9194),""Agent-001, Agent-002"" / Bargteheide,POINT(10.2608 53.7286),""Agent-001, Agent-002"" / Barmstedt,POINT(9.7667 53.7833),""Agent-001, Agent-002"" / Brunsbüttel,POINT(9.1386 53.8964),""Agent-001, Agent-002"" / Eutin,POINT(10.6181 54.1378),""Agent-001, Agent-002"" / Geesthacht,POINT(10.3675 53.4375),""Agent-001, Agent-002"" / Glückstadt,POINT(9.4219 53.7917),""Agent-001, Agent-002"" / Großhansdorf,POINT(10.2667 53.6667),""Agent-001, Agent-002"" / Halstenbek,POINT(9.8372 53.6334),""Agent-001, Agent-002"" / Handewitt,POINT(9.3167 54.7667),""Agent-001, Agent-002"" / Heide,POINT(9.0933 54.1961),""Agent-001, Agent-002"" / Heiligenhafen,POINT(10.9797 54.3739),""Agent-001, Agent-002"" / Kiel,POINT(10.1394 54.3233),""Agent-001, Agent-002"" / Kronshagen,POINT(10.0833 54.3333),""Agent-001, Agent-002"" / Neu Travemünde,POINT(10.8692 53.9606),""Agent-001, Agent-002"" / Neumünster,POINT(9.99 54.0714),""Agent-001, Agent-002"" / Pinneberg,POINT(9.8009 53.6591),""Agent-001, Agent-002"" / Preetz,POINT(10.2822 54.2367),""Agent-001, Agent-002"" / Ratekau,POINT(10.7333 53.95),""Agent-001, Agent-002"" / Ratzeburg,POINT(10.7567 53.7017),""Agent-001, Agent-002"" / Reinfeld,POINT(10.4833 53.8333),""Agent-001, Agent-002"" / Rellingen,POINT(9.8295 53.6532),""Agent-001, Agent-002"" / Scharbeutz,POINT(10.7456 54.0214),""Agent-001, Agent-002"" / Schleswig,POINT(9.5697 54.5153),""Agent-001, Agent-002"" / Timmendorfer Strand,POINT(10.7825 53.9944),""Agent-001, Agent-002"" / Tornesch,POINT(9.7167 53.7),""Agent-001, Agent-002"" / Uetersen,POINT(9.6692 53.6872),""Agent-001, Agent-002"" / Wedel,POINT(9.7 53.5833),""Agent-001, Agent-002""",,2026-11-07T13:55:40
+t059,Which cities does Saarland contain?,SPATIAL_RELATIONSHIP_BUFFER,81db92390106f857,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"41 item(s): Beckingen, Bexbach, Blieskastel, Dillingen, Eppelborn, Friedrichsthal, Heusweiler, Homburg, Illingen, Kirkel …",correct,"
+SELECT city_name, ST_AsText(centroid) AS point
+FROM cities
+WHERE ST_Within(centroid, {state:Saarland})
+ORDER BY city_name
+","city_name,point,db / Dillingen,POINT(6.7196 49.3574),""Agent-001, Agent-002"" / Friedrichsthal,POINT(7.0961 49.3256),""Agent-001, Agent-002"" / Merchweiler,POINT(7.06 49.3603),""Agent-001, Agent-002"" / Perl,POINT(6.385 49.4736),""Agent-001, Agent-002"" / Rehlingen-Siersburg,POINT(6.6786 49.3686),""Agent-001, Agent-002"" / Riegelsberg,POINT(6.9433 49.3058),""Agent-001, Agent-002"" / Saarwellingen,POINT(6.805 49.3542),""Agent-001, Agent-002"" / Sankt Ingbert,POINT(7.115 49.2789),""Agent-001, Agent-002"" / Schiffweiler,POINT(7.1289 49.3708),""Agent-001, Agent-002"" / Schmelz,POINT(6.8579 49.4407),""Agent-001, Agent-002"" / Schwalbach,POINT(6.8231 49.3067),""Agent-001, Agent-002"" / Spiesen-Elversberg,POINT(7.1331 49.3167),""Agent-001, Agent-002"" / Tholey,POINT(7.0333 49.4833),""Agent-001, Agent-002"" / Überherrn,POINT(6.7 49.25),""Agent-001, Agent-002"" / Völklingen,POINT(6.8567 49.253),""Agent-001, Agent-002"" / Wadern,POINT(6.89 49.5394),""Agent-001, Agent-002"" / Wallerfangen,POINT(6.7208 49.3278),""Agent-001, Agent-002"" / Beckingen,POINT(6.7008 49.3928),Agent-002 / Bexbach,POINT(7.2594 49.3494),Agent-002 / Blieskastel,POINT(7.2529 49.2373),Agent-002 / Eppelborn,POINT(6.9706 49.4022),Agent-002 / Heusweiler,POINT(6.9301 49.3375),Agent-002 / Homburg,POINT(7.3333 49.3167),Agent-002 / Illingen,POINT(7.0525 49.3764),Agent-002 / Kirkel,POINT(7.2333 49.2833),Agent-002 / Kleinblittersdorf,POINT(7.0381 49.1583),Agent-002 / Lebach,POINT(6.91 49.41),Agent-002 / Marpingen,POINT(7.05 49.45),Agent-002 / Merzig,POINT(6.6375 49.4422),Agent-002 / Mettlach,POINT(6.5972 49.4917),Agent-002",,2026-11-07T13:56:08
+t060,Which cities lie within 20 km of Hessen?,SPATIAL_RELATIONSHIP_BUFFER,861eaea738e7f925,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"274 item(s): Alsbach-Hähnlein, Alsfeld, Altenstadt, Alzenau in Unterfranken, Alzey, Arolsen, Aschaffenburg, Aßlar, Babenhausen, Bad Berleburg …",correct,"
+SELECT city_name, ST_AsText(centroid) AS point
+FROM cities
+WHERE ST_DWithin(centroid::geography, {state:Hessen}::geography, 20000)
+ORDER BY city_name
+","city_name,point,db / Alsfeld,POINT(9.2711 50.7511),""Agent-001, Agent-002"" / Arolsen,POINT(9.0167 51.3778),""Agent-001, Agent-002"" / Bad Hersfeld,POINT(9.7067 50.8683),""Agent-001, Agent-002"" / Bad Homburg,POINT(8.6105 50.2292),""Agent-001, Agent-002"" / Bad König,POINT(9.0071 49.7413),""Agent-001, Agent-002"" / Bad Laasphe,POINT(8.4167 50.9303),""Agent-001, Agent-002"" / Bad Salzungen,POINT(10.2333 50.8117),""Agent-001, Agent-002"" / Bad Soden am Taunus,POINT(8.4997 50.1424),""Agent-001, Agent-002"" / Bensheim,POINT(8.6228 49.6811),""Agent-001, Agent-002"" / Betzdorf,POINT(7.8728 50.7856),""Agent-001, Agent-002"" / Beverungen,POINT(9.3725 51.6628),""Agent-001, Agent-002"" / Biedenkopf,POINT(8.5322 50.9128),""Agent-001, Agent-002"" / Bingen am Rhein,POINT(7.895 49.9669),""Agent-001, Agent-002"" / Birkenau,POINT(8.7061 49.5607),""Agent-001, Agent-002"" / Bobenheim-Roxheim,POINT(8.3611 49.5839),""Agent-001, Agent-002"" / Borken,POINT(9.2793 51.0491),""Agent-001, Agent-002"" / Brakel,POINT(9.1833 51.7167),""Agent-001, Agent-002"" / Braunfels,POINT(8.3889 50.5175),""Agent-001, Agent-002"" / Bruchköbel,POINT(8.9167 50.1833),""Agent-001, Agent-002"" / Brühl,POINT(8.5353 49.4),""Agent-001, Agent-002"" / Budenheim,POINT(8.1667 50.0167),""Agent-001, Agent-002"" / Bürstadt,POINT(8.4546 49.6414),""Agent-001, Agent-002"" / Butzbach,POINT(8.6622 50.4367),""Agent-001, Agent-002"" / Darmstadt,POINT(8.65 49.8667),""Agent-001, Agent-002"" / Dieburg,POINT(8.8385 49.8985),""Agent-001, Agent-002"" / Dielheim,POINT(8.7347 49.2825),""Agent-001, Agent-002"" / Diez,POINT(8.0158 50.3708),""Agent-001, Agent-002"" / Dingelstädt,POINT(10.3194 51.3156),""Agent-001, Agent-002"" / Dreieich,POINT(8.6961 50.0189),""Agent-001, Agent-002"" / Eberbach,POINT(8.9833 49.4667),""Agent-001, Agent-002""","274 items = 273 names + two different cities with the same name, both within 20 km.
+Agent-001 first fetched Hessen's shape, then ran the spatial query.",2026-11-07T13:56:33
+t061,Which cities lie within 30 km of Saarland?,SPATIAL_RELATIONSHIP_BUFFER,a4ea848101aa8db8,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"48 item(s): Beckingen, Bexbach, Blieskastel, Dillingen, Eppelborn, Friedrichsthal, Heusweiler, Homburg, Illingen, Kaiserslautern …",correct,"
+SELECT city_name, ST_AsText(centroid) AS point
+FROM cities
+WHERE ST_DWithin(centroid::geography, {state:Saarland}::geography, 30000)
+ORDER BY city_name
+","city_name,point,db / Dillingen,POINT(6.7196 49.3574),""Agent-001, Agent-002"" / Friedrichsthal,POINT(7.0961 49.3256),""Agent-001, Agent-002"" / Kirn,POINT(7.4572 49.7881),""Agent-001, Agent-002"" / Merchweiler,POINT(7.06 49.3603),""Agent-001, Agent-002"" / Perl,POINT(6.385 49.4736),""Agent-001, Agent-002"" / Rehlingen-Siersburg,POINT(6.6786 49.3686),""Agent-001, Agent-002"" / Riegelsberg,POINT(6.9433 49.3058),""Agent-001, Agent-002"" / Saarwellingen,POINT(6.805 49.3542),""Agent-001, Agent-002"" / Sankt Ingbert,POINT(7.115 49.2789),""Agent-001, Agent-002"" / Schiffweiler,POINT(7.1289 49.3708),""Agent-001, Agent-002"" / Schmelz,POINT(6.8579 49.4407),""Agent-001, Agent-002"" / Schwalbach,POINT(6.8231 49.3067),""Agent-001, Agent-002"" / Spiesen-Elversberg,POINT(7.1331 49.3167),""Agent-001, Agent-002"" / Tholey,POINT(7.0333 49.4833),""Agent-001, Agent-002"" / Überherrn,POINT(6.7 49.25),""Agent-001, Agent-002"" / Völklingen,POINT(6.8567 49.253),""Agent-001, Agent-002"" / Wadern,POINT(6.89 49.5394),""Agent-001, Agent-002"" / Wallerfangen,POINT(6.7208 49.3278),""Agent-001, Agent-002"" / Beckingen,POINT(6.7008 49.3928),Agent-002 / Bexbach,POINT(7.2594 49.3494),Agent-002 / Blieskastel,POINT(7.2529 49.2373),Agent-002 / Eppelborn,POINT(6.9706 49.4022),Agent-002 / Heusweiler,POINT(6.9301 49.3375),Agent-002 / Homburg,POINT(7.3333 49.3167),Agent-002 / Illingen,POINT(7.0525 49.3764),Agent-002 / Kaiserslautern,POINT(7.7689 49.4447),Agent-002 / Kirkel,POINT(7.2333 49.2833),Agent-002 / Kleinblittersdorf,POINT(7.0381 49.1583),Agent-002 / Konz,POINT(6.5794 49.7028),Agent-002 / Lebach,POINT(6.91 49.41),Agent-002",,2026-11-07T13:56:59
+t062,Which states border Niedersachsen?,SPATIAL_ADJACENCY,56d9d7b2bab00986,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"9 item(s): Brandenburg, Bremen, Hamburg, Hessen, Mecklenburg-Vorpommern, Nordrhein-Westfalen, Sachsen-Anhalt, Schleswig-Holstein, Thüringen",correct,"
+SELECT state_name FROM states
+WHERE ST_DWithin(geo_shape, {state:Niedersachsen}, 0.001)
+  AND state_name <> 'Niedersachsen'
+ORDER BY state_name
+","state_name,db / Brandenburg,""Agent-001, Agent-002"" / Bremen,""Agent-001, Agent-002"" / Hamburg,""Agent-001, Agent-002"" / Mecklenburg-Vorpommern,""Agent-001, Agent-002"" / Nordrhein-Westfalen,""Agent-001, Agent-002"" / Sachsen-Anhalt,""Agent-001, Agent-002"" / Schleswig-Holstein,""Agent-001, Agent-002"" / Thüringen,""Agent-001, Agent-002"" / Hessen,Agent-002","All 9 neighbours are right, incl. the Bremen enclave. ST_Touches found only 5 because the
+state borders overlap slightly; with a 100 m tolerance the check gives exactly these 9.",2026-11-07T13:58:14
+t063,What are the neighbouring states of Bayern?,SPATIAL_ADJACENCY,b720a36b282d472a,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"4 item(s): Baden-Württemberg, Hessen, Sachsen, Thüringen",correct,"
+SELECT state_name FROM states
+WHERE ST_DWithin(geo_shape, {state:Bayern}, 0.001)
+  AND state_name <> 'Bayern'
+ORDER BY state_name
+","state_name,db / Baden-Württemberg,""Agent-001, Agent-002"" / Sachsen,""Agent-001, Agent-002"" / Thüringen,""Agent-001, Agent-002"" / Hessen,Agent-002",,2026-11-07T13:58:37
+t064,Which federal states share a border with Mecklenburg-Vorpommern?,SPATIAL_ADJACENCY,8d3666db1aabe799,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"3 item(s): Brandenburg, Niedersachsen, Schleswig-Holstein",correct,"
+SELECT state_name FROM states
+WHERE ST_DWithin(geo_shape, {state:Mecklenburg-Vorpommern}, 0.001)
+  AND state_name <> 'Mecklenburg-Vorpommern'
+ORDER BY state_name
+","state_name,db / Brandenburg,""Agent-001, Agent-002"" / Niedersachsen,""Agent-001, Agent-002"" / Schleswig-Holstein,""Agent-001, Agent-002""",,2026-11-07T14:03:40
+t065,Does Hessen border Bayern?,SPATIAL_ADJACENCY,4159cddc98b574f0,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Hessen,correct,"
+SELECT ST_DWithin({state:Hessen}, {state:Bayern}, 0.001) AS neighbours_100m,
+       ST_Intersects({state:Hessen}, {state:Bayern}) AS intersects
+","neighbours_100m,intersects,db / True,True,""Agent-001, Agent-002""",,2026-11-07T14:04:00
+t066,Is Saarland adjacent to Baden-Württemberg?,SPATIAL_ADJACENCY,1c570ba95191d8ef,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),not-found,0 item(s): ,correct,"
+SELECT ST_DWithin({state:Saarland}, {state:Baden-Württemberg}, 0.001) AS neighbours_100m,
+       ST_Intersects({state:Saarland}, {state:Baden-Württemberg}) AS intersects
+","neighbours_100m,intersects,db / False,False,""Agent-001, Agent-002""",Saarland and Baden-Württemberg do not touch (Rheinland-Pfalz lies between) - no is correct.,2026-11-07T14:04:25
+t067,Which states touch Brandenburg?,SPATIAL_ADJACENCY,1c808b16788373bb,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"5 item(s): Berlin, Mecklenburg-Vorpommern, Niedersachsen, Sachsen, Sachsen-Anhalt",correct,"
+SELECT state_name FROM states
+WHERE ST_DWithin(geo_shape, {state:Brandenburg}, 0.001)
+  AND state_name <> 'Brandenburg'
+ORDER BY state_name
+","state_name,db / Mecklenburg-Vorpommern,""Agent-001, Agent-002"" / Niedersachsen,""Agent-001, Agent-002"" / Sachsen,""Agent-001, Agent-002"" / Sachsen-Anhalt,""Agent-001, Agent-002"" / Berlin,Agent-002",,2026-11-07T14:04:46
+t068,Who are the neighbours of Rheinland-Pfalz?,SPATIAL_ADJACENCY,7282a019813d0da6,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"4 item(s): Baden-Württemberg, Hessen, Nordrhein-Westfalen, Saarland",correct,"
+SELECT state_name FROM states
+WHERE ST_DWithin(geo_shape, {state:Rheinland-Pfalz}, 0.001)
+  AND state_name <> 'Rheinland-Pfalz'
+ORDER BY state_name
+","state_name,db / Baden-Württemberg,""Agent-001, Agent-002"" / Nordrhein-Westfalen,""Agent-001, Agent-002"" / Saarland,""Agent-001, Agent-002"" / Hessen,Agent-002",,2026-11-07T14:05:05
+t069,Which state borders both Sachsen and Bayern?,SPATIAL_ADJACENCY,e8137ee552e5493c,30,Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Thüringen,correct,"
+SELECT state_name FROM states
+WHERE ST_DWithin(geo_shape, {state:Sachsen}, 0.001)
+  AND ST_DWithin(geo_shape, {state:Bayern}, 0.001)
+ORDER BY state_name
+","state_name,db / Sachsen,""Agent-001, Agent-002"" / Thüringen,""Agent-001, Agent-002"" / Bayern,Agent-002","Thüringen is the only state bordering both. Answer 2 (GPT-4o mini) lists Thüringen twice:
+right state, but the merge of local and peer results kept a duplicate.",2026-11-07T14:05:29
+t069,Which state borders both Sachsen and Bayern?,SPATIAL_ADJACENCY,e9b47c69de8b0163,10,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5),complete,"2 item(s): Thüringen, Thüringen",partly,"
+SELECT state_name FROM states
+WHERE ST_DWithin(geo_shape, {state:Sachsen}, 0.001)
+  AND ST_DWithin(geo_shape, {state:Bayern}, 0.001)
+ORDER BY state_name
+","state_name,db / Sachsen,""Agent-001, Agent-002"" / Thüringen,""Agent-001, Agent-002"" / Bayern,Agent-002","Thüringen is the only state bordering both. Answer 2 (GPT-4o mini) lists Thüringen twice:
+right state, but the merge of local and peer results kept a duplicate.",2026-11-07T14:05:29
+t070,What was the population of the states bordering Hessen in 2018?,SPATIAL_ADJACENCY,16e8d74ffb178e69,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"6 item(s): Baden-Württemberg 2018, Bayern 2018, Nordrhein-Westfalen 2018, Thüringen 2018, Rheinland-Pfalz 2018, Niedersachsen 2018",correct,"
+SELECT state_name FROM states
+WHERE ST_DWithin(geo_shape, {state:Hessen}, 0.001)
+  AND state_name <> 'Hessen'
+ORDER BY state_name;
+
+-- then the values for those states:
+SELECT s.state_name, d.stat_year, d.population
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Baden-Württemberg', 'Bayern', 'Niedersachsen', 'Nordrhein-Westfalen', 'Rheinland-Pfalz', 'Thüringen')
+  AND d.stat_year IN (2018)
+ORDER BY s.state_name, d.stat_year
+","state_name,db / Baden-Württemberg,""Agent-001, Agent-002"" / Niedersachsen,""Agent-001, Agent-002"" / Nordrhein-Westfalen,""Agent-001, Agent-002"" / Rheinland-Pfalz,""Agent-001, Agent-002"" / Thüringen,""Agent-001, Agent-002"" / Bayern,Agent-002 || state_name,stat_year,population,db / Niedersachsen,2018,7982448.0,""Agent-001, Agent-002"" / Nordrhein-Westfalen,2018,,Agent-001 / Rheinland-Pfalz,2018,4084844.0,""Agent-001, Agent-002"" / Thüringen,2018,2143145.0,Agent-001 / Baden-Württemberg,2018,11069533.0,Agent-002 / Bayern,2018,13076721.0,Agent-002 / Nordrhein-Westfalen,2018,17932651.0,Agent-002","Hessen's 6 neighbours with the right 2018 populations (NRW, Baden-Württemberg, Bayern via KQML
+from Agent-002).",2026-11-07T14:05:52
+t071,Give me the marriages in 2017 of every state that borders Thüringen,SPATIAL_ADJACENCY,a749bf2c75789eaa,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),partial-complete,"5 item(s): Sachsen-Anhalt 2017, Hessen 2017, Niedersachsen 2017, Bayern 2017, Sachsen 2017",correct,"
+SELECT state_name FROM states
+WHERE ST_DWithin(geo_shape, {state:Thüringen}, 0.001)
+  AND state_name <> 'Thüringen'
+ORDER BY state_name;
+
+-- then the values for those states:
+SELECT s.state_name, d.stat_year, d.marriages
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Bayern', 'Hessen', 'Niedersachsen', 'Sachsen', 'Sachsen-Anhalt')
+  AND d.stat_year IN (2017)
+ORDER BY s.state_name, d.stat_year
+","state_name,db / Niedersachsen,""Agent-001, Agent-002"" / Sachsen,""Agent-001, Agent-002"" / Sachsen-Anhalt,""Agent-001, Agent-002"" / Bayern,Agent-002 / Hessen,Agent-002 || state_name,stat_year,marriages,db / Hessen,2017,,Agent-001 / Niedersachsen,2017,41601.0,""Agent-001, Agent-002"" / Sachsen,2017,,Agent-001 / Sachsen-Anhalt,2017,10424.0,Agent-001 / Bayern,2017,66790.0,Agent-002 / Hessen,2017,29281.0,Agent-002","Thüringen's 5 neighbours. Sachsen 2017 marriages are missing in both databases, so
+partial-complete is correct; the other 4 values match.",2026-11-07T14:06:21
+t072,Do Bremen and Hamburg share a border?,SPATIAL_ADJACENCY,1c570ba95191d8ef,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),not-found,0 item(s): ,correct,"
+SELECT ST_DWithin({state:Bremen}, {state:Hamburg}, 0.001) AS neighbours_100m,
+       ST_Intersects({state:Bremen}, {state:Hamburg}) AS intersects
+","neighbours_100m,intersects,db / False,False,""Agent-001, Agent-002""",,2026-11-07T14:06:49
+t073,Which states border Hamburg?,SPATIAL_ADJACENCY,63ac3cf1b54d45db,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"2 item(s): Niedersachsen, Schleswig-Holstein",correct,"
+SELECT state_name FROM states
+WHERE ST_DWithin(geo_shape, {state:Hamburg}, 0.001)
+  AND state_name <> 'Hamburg'
+ORDER BY state_name
+","state_name,db / Niedersachsen,""Agent-001, Agent-002"" / Schleswig-Holstein,""Agent-001, Agent-002""",,2026-11-07T14:07:10
+t074,Which states lie south of Hessen?,SPATIAL_DIRECTION,9bec5caa9ca04dd3,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Baden-Württemberg,correct,"
+SELECT * FROM (
+  SELECT state_name,
+         ROUND((ST_Y(ST_Centroid(geo_shape)) - ST_Y(ST_Centroid({state:Hessen})))::numeric, 2) AS d_lat,
+         ROUND((ST_X(ST_Centroid(geo_shape)) - ST_X(ST_Centroid({state:Hessen})))::numeric, 2) AS d_lon
+  FROM states WHERE state_name <> 'Hessen'
+) x
+WHERE d_lat < 0
+ORDER BY state_name
+","state_name,d_lat,d_lon,db / Baden-Württemberg,-2.05,0.01,""Agent-001, Agent-002"" / Rheinland-Pfalz,-0.69,-1.59,""Agent-001, Agent-002"" / Saarland,-1.22,-2.08,""Agent-001, Agent-002"" / Bayern,-1.66,2.38,Agent-002","Direction = 90° sector from the reference state's centroid (south = 135-225°,
+direction_sectors in the agent config). Bayern lies at ~125°, Rheinland-Pfalz and Saarland at
+~240-247°, so only Baden-Württemberg counts. Consistent with that definition.",2026-11-07T14:07:32
+t075,What states are east of Nordrhein-Westfalen?,SPATIAL_DIRECTION,0ce7ded33ca23b09,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"10 item(s): Bayern, Berlin, Brandenburg, Hamburg, Hessen, Mecklenburg-Vorpommern, Niedersachsen, Sachsen, Sachsen-Anhalt, Thüringen",correct,"
+SELECT * FROM (
+  SELECT state_name,
+         ROUND((ST_Y(ST_Centroid(geo_shape)) - ST_Y(ST_Centroid({state:Nordrhein-Westfalen})))::numeric, 2) AS d_lat,
+         ROUND((ST_X(ST_Centroid(geo_shape)) - ST_X(ST_Centroid({state:Nordrhein-Westfalen})))::numeric, 2) AS d_lon
+  FROM states WHERE state_name <> 'Nordrhein-Westfalen'
+) x
+WHERE d_lon > 0
+ORDER BY state_name
+","state_name,d_lat,d_lon,db / Baden-Württemberg,-2.93,1.48,""Agent-001, Agent-002"" / Brandenburg,1.00,5.83,""Agent-001, Agent-002"" / Bremen,1.64,1.22,""Agent-001, Agent-002"" / Hamburg,2.08,2.46,""Agent-001, Agent-002"" / Mecklenburg-Vorpommern,2.28,4.97,""Agent-001, Agent-002"" / Niedersachsen,1.29,1.60,""Agent-001, Agent-002"" / Sachsen,-0.43,5.79,""Agent-001, Agent-002"" / Sachsen-Anhalt,0.54,4.14,""Agent-001, Agent-002"" / Schleswig-Holstein,2.71,2.24,""Agent-001, Agent-002"" / Thüringen,-0.57,3.46,""Agent-001, Agent-002"" / Bayern,-2.53,3.86,Agent-002 / Berlin,1.02,5.84,Agent-002 / Hessen,-0.87,1.47,Agent-002","Sector 45-135° from NRW's centroid: Bremen and Schleswig-Holstein (<45°) and
+Baden-Württemberg (~153°) fall outside. Consistent.",2026-11-07T14:07:59
+t076,Which federal states are west of Sachsen?,SPATIAL_DIRECTION,b457cfd49a3fa47b,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"11 item(s): Baden-Württemberg, Bremen, Hamburg, Hessen, Niedersachsen, Nordrhein-Westfalen, Rheinland-Pfalz, Saarland, Sachsen-Anhalt, Schleswig-Holstein …",correct,"
+SELECT * FROM (
+  SELECT state_name,
+         ROUND((ST_Y(ST_Centroid(geo_shape)) - ST_Y(ST_Centroid({state:Sachsen})))::numeric, 2) AS d_lat,
+         ROUND((ST_X(ST_Centroid(geo_shape)) - ST_X(ST_Centroid({state:Sachsen})))::numeric, 2) AS d_lon
+  FROM states WHERE state_name <> 'Sachsen'
+) x
+WHERE d_lon < 0
+ORDER BY state_name
+","state_name,d_lat,d_lon,db / Baden-Württemberg,-2.50,-4.30,""Agent-001, Agent-002"" / Bremen,2.06,-4.57,""Agent-001, Agent-002"" / Hamburg,2.50,-3.33,""Agent-001, Agent-002"" / Mecklenburg-Vorpommern,2.70,-0.82,""Agent-001, Agent-002"" / Niedersachsen,1.72,-4.18,""Agent-001, Agent-002"" / Nordrhein-Westfalen,0.43,-5.79,""Agent-001, Agent-002"" / Rheinland-Pfalz,-1.14,-5.90,""Agent-001, Agent-002"" / Saarland,-1.66,-6.40,""Agent-001, Agent-002"" / Sachsen-Anhalt,0.96,-1.65,""Agent-001, Agent-002"" / Schleswig-Holstein,3.14,-3.55,""Agent-001, Agent-002"" / Thüringen,-0.15,-2.32,""Agent-001, Agent-002"" / Bayern,-2.10,-1.93,Agent-002 / Hessen,-0.45,-4.31,Agent-002",Sector 225-315°: Bayern (~223°) and Mecklenburg-Vorpommern (~343°) fall just outside. Consistent.,2026-11-07T14:08:21
+t077,Is Bayern south of Thüringen?,SPATIAL_DIRECTION,651d82c2a057ac84,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Bayern,correct,"
+SELECT ROUND(ST_Y(ST_Centroid({state:Bayern}))::numeric, 3) AS bayern_lat,
+       ROUND(ST_Y(ST_Centroid({state:Thüringen}))::numeric, 3) AS thürin_lat,
+       ROUND(ST_X(ST_Centroid({state:Bayern}))::numeric, 3) AS bayern_lon,
+       ROUND(ST_X(ST_Centroid({state:Thüringen}))::numeric, 3) AS thürin_lon
+","bayern_lat,thürin_lat,bayern_lon,thürin_lon,db / 48.947,50.903,11.423,11.030,""Agent-001, Agent-002""",,2026-11-07T14:08:46
+t078,Which states are north of Bayern?,SPATIAL_DIRECTION,e3b5059c468be681,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"10 item(s): Berlin, Brandenburg, Bremen, Hamburg, Mecklenburg-Vorpommern, Niedersachsen, Sachsen, Sachsen-Anhalt, Schleswig-Holstein, Thüringen",correct,"
+SELECT * FROM (
+  SELECT state_name,
+         ROUND((ST_Y(ST_Centroid(geo_shape)) - ST_Y(ST_Centroid({state:Bayern})))::numeric, 2) AS d_lat,
+         ROUND((ST_X(ST_Centroid(geo_shape)) - ST_X(ST_Centroid({state:Bayern})))::numeric, 2) AS d_lon
+  FROM states WHERE state_name <> 'Bayern'
+) x
+WHERE d_lat > 0
+ORDER BY state_name
+","state_name,d_lat,d_lon,db / Brandenburg,3.53,1.98,""Agent-001, Agent-002"" / Bremen,4.17,-2.64,""Agent-001, Agent-002"" / Hamburg,4.61,-1.40,""Agent-001, Agent-002"" / Mecklenburg-Vorpommern,4.81,1.11,""Agent-001, Agent-002"" / Niedersachsen,3.82,-2.25,""Agent-001, Agent-002"" / Nordrhein-Westfalen,2.53,-3.86,""Agent-001, Agent-002"" / Rheinland-Pfalz,0.97,-3.97,""Agent-001, Agent-002"" / Saarland,0.44,-4.47,""Agent-001, Agent-002"" / Sachsen,2.10,1.93,""Agent-001, Agent-002"" / Sachsen-Anhalt,3.07,0.28,""Agent-001, Agent-002"" / Schleswig-Holstein,5.24,-1.62,""Agent-001, Agent-002"" / Thüringen,1.96,-0.39,""Agent-001, Agent-002"" / Berlin,3.55,1.99,Agent-002 / Hessen,1.66,-2.38,Agent-002","Sector 315-45°: Hessen, NRW, Rheinland-Pfalz and Saarland lie north-west (~300-305°), outside. Consistent.",2026-11-07T14:09:11
+t079,Is Hamburg north of Bremen?,SPATIAL_DIRECTION,9dd7c28d3407bc37,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),not-found,0 item(s): ,correct,"
+SELECT ROUND(ST_Y(ST_Centroid({state:Hamburg}))::numeric, 3) AS hambur_lat,
+       ROUND(ST_Y(ST_Centroid({state:Bremen}))::numeric, 3) AS bremen_lat,
+       ROUND(ST_X(ST_Centroid({state:Hamburg}))::numeric, 3) AS hambur_lon,
+       ROUND(ST_X(ST_Centroid({state:Bremen}))::numeric, 3) AS bremen_lon
+","hambur_lat,bremen_lat,hambur_lon,bremen_lon,db / 53.555,53.112,10.027,8.786,""Agent-001, Agent-002""","Hamburg's centroid lies at a bearing of ~70° from Bremen's (east-north-east), outside the north
+sector 315-45°. So 'no' is consistent with the system's definition, although Hamburg is further
+north by latitude.",2026-11-07T14:09:32
+t080,Which states lie east of Niedersachsen?,SPATIAL_DIRECTION,113a2699fb161fda,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"6 item(s): Berlin, Brandenburg, Hamburg, Mecklenburg-Vorpommern, Sachsen, Sachsen-Anhalt",correct,"
+SELECT * FROM (
+  SELECT state_name,
+         ROUND((ST_Y(ST_Centroid(geo_shape)) - ST_Y(ST_Centroid({state:Niedersachsen})))::numeric, 2) AS d_lat,
+         ROUND((ST_X(ST_Centroid(geo_shape)) - ST_X(ST_Centroid({state:Niedersachsen})))::numeric, 2) AS d_lon
+  FROM states WHERE state_name <> 'Niedersachsen'
+) x
+WHERE d_lon > 0
+ORDER BY state_name
+","state_name,d_lat,d_lon,db / Brandenburg,-0.30,4.23,""Agent-001, Agent-002"" / Hamburg,0.78,0.86,""Agent-001, Agent-002"" / Mecklenburg-Vorpommern,0.98,3.37,""Agent-001, Agent-002"" / Sachsen,-1.72,4.18,""Agent-001, Agent-002"" / Sachsen-Anhalt,-0.76,2.54,""Agent-001, Agent-002"" / Schleswig-Holstein,1.42,0.64,""Agent-001, Agent-002"" / Thüringen,-1.87,1.86,""Agent-001, Agent-002"" / Bayern,-3.82,2.25,Agent-002 / Berlin,-0.27,4.24,Agent-002","Sector 45-135°: Thüringen (~135°) is borderline, Schleswig-Holstein (~24°) and Bayern (~150°)
+are outside. Consistent.",2026-11-07T14:09:53
+t081,States to the west of Brandenburg,SPATIAL_DIRECTION,b457cfd49a3fa47b,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"11 item(s): Baden-Württemberg, Bremen, Hamburg, Hessen, Niedersachsen, Nordrhein-Westfalen, Rheinland-Pfalz, Saarland, Sachsen-Anhalt, Schleswig-Holstein …",correct,"
+SELECT * FROM (
+  SELECT state_name,
+         ROUND((ST_Y(ST_Centroid(geo_shape)) - ST_Y(ST_Centroid({state:Brandenburg})))::numeric, 2) AS d_lat,
+         ROUND((ST_X(ST_Centroid(geo_shape)) - ST_X(ST_Centroid({state:Brandenburg})))::numeric, 2) AS d_lon
+  FROM states WHERE state_name <> 'Brandenburg'
+) x
+WHERE d_lon < 0
+ORDER BY state_name
+","state_name,d_lat,d_lon,db / Baden-Württemberg,-3.92,-4.35,""Agent-001, Agent-002"" / Bremen,0.64,-4.61,""Agent-001, Agent-002"" / Hamburg,1.08,-3.37,""Agent-001, Agent-002"" / Mecklenburg-Vorpommern,1.28,-0.86,""Agent-001, Agent-002"" / Niedersachsen,0.30,-4.23,""Agent-001, Agent-002"" / Nordrhein-Westfalen,-1.00,-5.83,""Agent-001, Agent-002"" / Rheinland-Pfalz,-2.56,-5.94,""Agent-001, Agent-002"" / Saarland,-3.09,-6.44,""Agent-001, Agent-002"" / Sachsen,-1.42,-0.04,""Agent-001, Agent-002"" / Sachsen-Anhalt,-0.46,-1.69,""Agent-001, Agent-002"" / Schleswig-Holstein,1.72,-3.59,""Agent-001, Agent-002"" / Thüringen,-1.57,-2.37,""Agent-001, Agent-002"" / Bayern,-3.53,-1.98,Agent-002 / Hessen,-1.87,-4.36,Agent-002","Sector 225-315°: Bayern (~209°), Sachsen (~182°) and Mecklenburg-Vorpommern (~326°) are outside. Consistent.",2026-11-07T14:10:22
+t082,Is Saarland west of Hessen?,SPATIAL_DIRECTION,b62642e33958ce16,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Saarland,correct,"
+SELECT ROUND(ST_Y(ST_Centroid({state:Saarland}))::numeric, 3) AS saarla_lat,
+       ROUND(ST_Y(ST_Centroid({state:Hessen}))::numeric, 3) AS hessen_lat,
+       ROUND(ST_X(ST_Centroid({state:Saarland}))::numeric, 3) AS saarla_lon,
+       ROUND(ST_X(ST_Centroid({state:Hessen}))::numeric, 3) AS hessen_lon
+","saarla_lat,hessen_lat,saarla_lon,hessen_lon,db / 49.387,50.602,6.957,9.039,""Agent-001, Agent-002""",,2026-11-07T14:10:42
+t083,What was the population in 2019 of the states north of Hessen?,SPATIAL_DIRECTION,f9b190c634fc2546,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"4 item(s): Hamburg 2019, Schleswig-Holstein 2019, Bremen 2019, Niedersachsen 2019",correct,"
+SELECT * FROM (
+  SELECT state_name,
+         ROUND((ST_Y(ST_Centroid(geo_shape)) - ST_Y(ST_Centroid({state:Hessen})))::numeric, 2) AS d_lat,
+         ROUND((ST_X(ST_Centroid(geo_shape)) - ST_X(ST_Centroid({state:Hessen})))::numeric, 2) AS d_lon
+  FROM states WHERE state_name <> 'Hessen'
+) x
+WHERE d_lat > 0
+ORDER BY state_name;
+
+-- then the values for those states:
+SELECT s.state_name, d.stat_year, d.population
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Bremen', 'Hamburg', 'Niedersachsen', 'Schleswig-Holstein')
+  AND d.stat_year IN (2019)
+ORDER BY s.state_name, d.stat_year
+","state_name,d_lat,d_lon,db / Brandenburg,1.87,4.36,""Agent-001, Agent-002"" / Bremen,2.51,-0.25,""Agent-001, Agent-002"" / Hamburg,2.95,0.99,""Agent-001, Agent-002"" / Mecklenburg-Vorpommern,3.15,3.50,""Agent-001, Agent-002"" / Niedersachsen,2.17,0.13,""Agent-001, Agent-002"" / Nordrhein-Westfalen,0.87,-1.47,""Agent-001, Agent-002"" / Sachsen,0.45,4.31,""Agent-001, Agent-002"" / Sachsen-Anhalt,1.41,2.67,""Agent-001, Agent-002"" / Schleswig-Holstein,3.59,0.77,""Agent-001, Agent-002"" / Thüringen,0.30,1.99,""Agent-001, Agent-002"" / Berlin,1.90,4.37,Agent-002 || state_name,stat_year,population,db / Niedersachsen,2019,7993608,""Agent-001, Agent-002"" / Schleswig-Holstein,2019,2903773,Agent-001 / Bremen,2019,681202,Agent-002 / Hamburg,2019,1847253,Agent-002","North sector from Hessen: Niedersachsen, Bremen, Hamburg, Schleswig-Holstein; the 2019 values
+match both databases.",2026-11-07T14:11:06
+t084,Which states are located south of Schleswig-Holstein?,SPATIAL_DIRECTION,afbe1282fd891e60,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"11 item(s): Baden-Württemberg, Bayern, Bremen, Hamburg, Hessen, Niedersachsen, Nordrhein-Westfalen, Rheinland-Pfalz, Saarland, Sachsen-Anhalt …",correct,"
+SELECT * FROM (
+  SELECT state_name,
+         ROUND((ST_Y(ST_Centroid(geo_shape)) - ST_Y(ST_Centroid({state:Schleswig-Holstein})))::numeric, 2) AS d_lat,
+         ROUND((ST_X(ST_Centroid(geo_shape)) - ST_X(ST_Centroid({state:Schleswig-Holstein})))::numeric, 2) AS d_lon
+  FROM states WHERE state_name <> 'Schleswig-Holstein'
+) x
+WHERE d_lat < 0
+ORDER BY state_name
+","state_name,d_lat,d_lon,db / Baden-Württemberg,-5.64,-0.76,""Agent-001, Agent-002"" / Brandenburg,-1.72,3.59,""Agent-001, Agent-002"" / Bremen,-1.08,-1.02,""Agent-001, Agent-002"" / Hamburg,-0.63,0.22,""Agent-001, Agent-002"" / Mecklenburg-Vorpommern,-0.44,2.73,""Agent-001, Agent-002"" / Niedersachsen,-1.42,-0.64,""Agent-001, Agent-002"" / Nordrhein-Westfalen,-2.71,-2.24,""Agent-001, Agent-002"" / Rheinland-Pfalz,-4.27,-2.35,""Agent-001, Agent-002"" / Saarland,-4.80,-2.85,""Agent-001, Agent-002"" / Sachsen,-3.14,3.55,""Agent-001, Agent-002"" / Sachsen-Anhalt,-2.18,1.90,""Agent-001, Agent-002"" / Thüringen,-3.29,1.22,""Agent-001, Agent-002"" / Bayern,-5.24,1.62,Agent-002 / Berlin,-1.69,3.60,Agent-002 / Hessen,-3.59,-0.77,Agent-002","Sector 135-225°: Berlin, Brandenburg, Mecklenburg-Vorpommern (east) and Sachsen (~131°) are outside. Consistent.",2026-11-07T14:11:43
+t085,Which states are within 50 km of Göttingen?,SPATIAL_DISTANCE,fbe3c6112759f67f,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"4 item(s): Hessen, Niedersachsen, Nordrhein-Westfalen, Thüringen",correct,"
+SELECT * FROM (
+SELECT state_name,
+       ROUND((ST_Distance(geo_shape::geography, {city:Göttingen}::geography) / 1000)::numeric, 1) AS km
+FROM states
+ORDER BY km
+) x
+WHERE km <= 50
+ORDER BY km
+","state_name,km,db / Niedersachsen,0.0,""Agent-001, Agent-002"" / Thüringen,13.4,""Agent-001, Agent-002"" / Nordrhein-Westfalen,35.8,""Agent-001, Agent-002"" / Hessen,12.8,Agent-002",,2026-11-07T14:12:09
+t086,Which federal states lie within 120 km of Nürnberg?,SPATIAL_DISTANCE,fd185f6d21d5c3b0,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"4 item(s): Baden-Württemberg, Bayern, Sachsen, Thüringen",correct,"
+-- the databases store Nürnberg as 'Nuremberg'
+SELECT * FROM (
+SELECT state_name,
+       ROUND((ST_Distance(geo_shape::geography, {city:Nuremberg}::geography) / 1000)::numeric, 1) AS km
+FROM states
+ORDER BY km
+) x
+WHERE km <= 120
+ORDER BY km
+","state_name,km,db / Baden-Württemberg,66.0,""Agent-001, Agent-002"" / Thüringen,86.7,""Agent-001, Agent-002"" / Sachsen,118.7,""Agent-001, Agent-002"" / Bayern,0.0,Agent-002","Nürnberg is stored as 'Nuremberg' and the agents resolved it. Bayern 0, Baden-Württemberg 66.0,
+Thüringen 86.7, Sachsen 118.7 km - all within 120 km.",2026-11-07T14:12:30
+t087,States within 30 km of Mannheim,SPATIAL_DISTANCE,6f5acb6328e66c3a,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"3 item(s): Baden-Württemberg, Hessen, Rheinland-Pfalz",correct,"
+SELECT * FROM (
+SELECT state_name,
+       ROUND((ST_Distance(geo_shape::geography, {city:Mannheim}::geography) / 1000)::numeric, 1) AS km
+FROM states
+ORDER BY km
+) x
+WHERE km <= 30
+ORDER BY km
+","state_name,km,db / Baden-Württemberg,0.0,""Agent-001, Agent-002"" / Rheinland-Pfalz,0.7,""Agent-001, Agent-002"" / Hessen,7.4,Agent-002",,2026-11-07T14:12:54
+t088,Is Thüringen within 100 km of Hannover?,SPATIAL_DISTANCE,49dc063585ebbfef,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Thüringen,correct,"
+SELECT state_name,
+       ROUND((ST_Distance(geo_shape::geography, {city:Hannover}::geography) / 1000)::numeric, 1) AS km
+FROM states
+ORDER BY km
+","state_name,km,db / Niedersachsen,0.0,""Agent-001, Agent-002"" / Nordrhein-Westfalen,41.8,""Agent-001, Agent-002"" / Sachsen-Anhalt,69.3,""Agent-001, Agent-002"" / Bremen,89.6,""Agent-001, Agent-002"" / Thüringen,98.2,""Agent-001, Agent-002"" / Hamburg,117.4,""Agent-001, Agent-002"" / Schleswig-Holstein,123.7,""Agent-001, Agent-002"" / Mecklenburg-Vorpommern,125.3,""Agent-001, Agent-002"" / Brandenburg,131.5,""Agent-001, Agent-002"" / Sachsen,193.9,""Agent-001, Agent-002"" / Rheinland-Pfalz,207.2,""Agent-001, Agent-002"" / Baden-Württemberg,287.8,""Agent-001, Agent-002"" / Saarland,354.5,""Agent-001, Agent-002"" / Berlin,,Agent-001 / Hessen,,Agent-001 / Bayern,,Agent-001 / Hessen,81.5,Agent-002 / Bayern,203.0,Agent-002 / Berlin,228.4,Agent-002",Thüringen is 98.2 km from Hannover - yes is correct.,2026-11-07T14:13:16
+t089,Which states are within 200 km of Leipzig?,SPATIAL_DISTANCE,791aa554cf195932,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"8 item(s): Bayern, Berlin, Brandenburg, Hessen, Niedersachsen, Sachsen, Sachsen-Anhalt, Thüringen",correct,"
+SELECT * FROM (
+SELECT state_name,
+       ROUND((ST_Distance(geo_shape::geography, {city:Leipzig}::geography) / 1000)::numeric, 1) AS km
+FROM states
+ORDER BY km
+) x
+WHERE km <= 200
+ORDER BY km
+","state_name,km,db / Sachsen,0.0,""Agent-001, Agent-002"" / Sachsen-Anhalt,11.6,""Agent-001, Agent-002"" / Thüringen,26.1,""Agent-001, Agent-002"" / Brandenburg,58.0,""Agent-001, Agent-002"" / Niedersachsen,120.6,""Agent-001, Agent-002"" / Bayern,106.0,Agent-002 / Berlin,128.1,Agent-002 / Hessen,149.9,Agent-002",,2026-11-07T14:13:38
+t090,Which states lie within 75 km of Magdeburg?,SPATIAL_DISTANCE,b1208bd827a9b4e1,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"3 item(s): Brandenburg, Niedersachsen, Sachsen-Anhalt",correct,"
+SELECT * FROM (
+SELECT state_name,
+       ROUND((ST_Distance(geo_shape::geography, {city:Magdeburg}::geography) / 1000)::numeric, 1) AS km
+FROM states
+ORDER BY km
+) x
+WHERE km <= 75
+ORDER BY km
+","state_name,km,db / Sachsen-Anhalt,0.0,""Agent-001, Agent-002"" / Niedersachsen,38.9,""Agent-001, Agent-002"" / Brandenburg,40.0,""Agent-001, Agent-002""",,2026-11-07T14:14:06
+t091,Is Bremen within 150 km of Hamburg?,SPATIAL_DISTANCE,072637b437302423,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Bremen,correct,"
+SELECT state_name,
+       ROUND((ST_Distance(geo_shape::geography, {state:Hamburg}::geography) / 1000)::numeric, 1) AS km
+FROM states WHERE state_name <> 'Hamburg'
+ORDER BY km
+","state_name,km,db / Schleswig-Holstein,0.0,""Agent-001, Agent-002"" / Niedersachsen,0.0,""Agent-001, Agent-002"" / Mecklenburg-Vorpommern,19.2,""Agent-001, Agent-002"" / Bremen,66.5,""Agent-001, Agent-002"" / Sachsen-Anhalt,70.6,""Agent-001, Agent-002"" / Brandenburg,72.6,""Agent-001, Agent-002"" / Nordrhein-Westfalen,116.6,""Agent-001, Agent-002"" / Thüringen,198.3,""Agent-001, Agent-002"" / Sachsen,245.6,""Agent-001, Agent-002"" / Rheinland-Pfalz,311.2,""Agent-001, Agent-002"" / Baden-Württemberg,404.4,""Agent-001, Agent-002"" / Saarland,463.8,""Agent-001, Agent-002"" / Berlin,,Agent-001 / Hessen,,Agent-001 / Bayern,,Agent-001 / Hessen,198.6,Agent-002 / Berlin,211.3,Agent-002 / Bayern,316.0,Agent-002",,2026-11-07T14:14:29
+t092,Which states are within 40 km of Saarland?,SPATIAL_DISTANCE,51420ce6c99c7974,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,1 item(s): Rheinland-Pfalz,correct,"
+SELECT * FROM (
+SELECT state_name,
+       ROUND((ST_Distance(geo_shape::geography, {state:Saarland}::geography) / 1000)::numeric, 1) AS km
+FROM states WHERE state_name <> 'Saarland'
+ORDER BY km
+) x
+WHERE km <= 40
+ORDER BY km
+","state_name,km,db / Rheinland-Pfalz,0.0,""Agent-001, Agent-002""",,2026-11-07T14:14:53
+t093,Which states lie within 60 km of Frankfurt am Main?,SPATIAL_DISTANCE,7446917f77ad3d4d,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),not-found,0 item(s): ,wrong,"
+-- the databases store Frankfurt am Main as 'Frankfurt'
+SELECT * FROM (
+SELECT state_name,
+       ROUND((ST_Distance(geo_shape::geography, {city:Frankfurt}::geography) / 1000)::numeric, 1) AS km
+FROM states
+ORDER BY km
+) x
+WHERE km <= 60
+ORDER BY km
+","state_name,km,db / Rheinland-Pfalz,29.2,""Agent-001, Agent-002"" / Baden-Württemberg,53.4,""Agent-001, Agent-002"" / Hessen,0.0,Agent-002 / Bayern,23.3,Agent-002","Wrong. Frankfurt am Main is stored as 'Frankfurt' (POINT 8.6822 50.1106) and no agent resolved
+the name - both agents answered 'shape not found'. Correct answer: Hessen 0 km, Bayern 23.3,
+Rheinland-Pfalz 29.2, Baden-Württemberg 53.4 km. The data marks it correct; it is not.",2026-11-07T14:15:19
+t094,Give me the live births in 2016 of the states within 100 km of Kassel,SPATIAL_DISTANCE,39227a266d5aac85,30,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),partial-complete,"6 item(s): Hessen 2016, Niedersachsen 2016, Nordrhein-Westfalen 2016, Sachsen-Anhalt 2016, Thüringen 2016, Bayern 2016",correct,"
+SELECT * FROM (
+SELECT state_name,
+       ROUND((ST_Distance(geo_shape::geography, {city:Kassel}::geography) / 1000)::numeric, 1) AS km
+FROM states
+ORDER BY km
+) x
+WHERE km <= 100
+ORDER BY km;
+
+-- then the values for those states:
+SELECT s.state_name, d.stat_year, d.live_births
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Bayern', 'Hessen', 'Niedersachsen', 'Nordrhein-Westfalen', 'Sachsen-Anhalt', 'Thüringen')
+  AND d.stat_year IN (2016)
+ORDER BY s.state_name, d.stat_year
+","state_name,km,db / Niedersachsen,5.7,""Agent-001, Agent-002"" / Nordrhein-Westfalen,24.6,""Agent-001, Agent-002"" / Thüringen,30.3,""Agent-001, Agent-002"" / Sachsen-Anhalt,90.4,""Agent-001, Agent-002"" / Hessen,0.0,Agent-002 / Bayern,94.0,Agent-002 || state_name,stat_year,live_births,db / Hessen,2016,30981.0,""Agent-001, Agent-002"" / Niedersachsen,2016,38471.0,""Agent-001, Agent-002"" / Nordrhein-Westfalen,2016,88627.0,""Agent-001, Agent-002"" / Sachsen-Anhalt,2016,9335.0,Agent-001 / Thüringen,2016,9454.0,Agent-001 / Bayern,2016,,Agent-002","Answer 1: 6 states within 100 km of Kassel (Bayern 94.0 km). Bayern's 2016 live births are
+missing in both databases, so partial-complete is right; the other 5 values match.
+Answer 2: Qwen3-8B misclassified it as SPATIAL_OPERATION and its SQL left :year unbound -
+status error in all 10 asks.",2026-11-07T14:15:48
+t094,Give me the live births in 2016 of the states within 100 km of Kassel,SPATIAL_DISTANCE,8b87f7522f27f9e9,10,Qwen3-8B / A1 (5); Qwen3-8B / A2 (5),error,"{""status"": ""error""}",wrong,"
+SELECT * FROM (
+SELECT state_name,
+       ROUND((ST_Distance(geo_shape::geography, {city:Kassel}::geography) / 1000)::numeric, 1) AS km
+FROM states
+ORDER BY km
+) x
+WHERE km <= 100
+ORDER BY km;
+
+-- then the values for those states:
+SELECT s.state_name, d.stat_year, d.live_births
+FROM state_demographics d JOIN states s USING (state_id)
+WHERE s.state_name IN ('Bayern', 'Hessen', 'Niedersachsen', 'Nordrhein-Westfalen', 'Sachsen-Anhalt', 'Thüringen')
+  AND d.stat_year IN (2016)
+ORDER BY s.state_name, d.stat_year
+","state_name,km,db / Niedersachsen,5.7,""Agent-001, Agent-002"" / Nordrhein-Westfalen,24.6,""Agent-001, Agent-002"" / Thüringen,30.3,""Agent-001, Agent-002"" / Sachsen-Anhalt,90.4,""Agent-001, Agent-002"" / Hessen,0.0,Agent-002 / Bayern,94.0,Agent-002 || state_name,stat_year,live_births,db / Hessen,2016,30981.0,""Agent-001, Agent-002"" / Niedersachsen,2016,38471.0,""Agent-001, Agent-002"" / Nordrhein-Westfalen,2016,88627.0,""Agent-001, Agent-002"" / Sachsen-Anhalt,2016,9335.0,Agent-001 / Thüringen,2016,9454.0,Agent-001 / Bayern,2016,,Agent-002","Answer 1: 6 states within 100 km of Kassel (Bayern 94.0 km). Bayern's 2016 live births are
+missing in both databases, so partial-complete is right; the other 5 values match.
+Answer 2: Qwen3-8B misclassified it as SPATIAL_OPERATION and its SQL left :year unbound -
+status error in all 10 asks.",2026-11-07T14:15:48
+t095,Which states are within 90 km of Rostock?,SPATIAL_DISTANCE,926674caec92ae20,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),complete,"3 item(s): Brandenburg, Mecklenburg-Vorpommern, Schleswig-Holstein",correct,"
+SELECT * FROM (
+SELECT state_name,
+       ROUND((ST_Distance(geo_shape::geography, {city:Rostock}::geography) / 1000)::numeric, 1) AS km
+FROM states
+ORDER BY km
+) x
+WHERE km <= 90
+ORDER BY km
+","state_name,km,db / Mecklenburg-Vorpommern,0.0,""Agent-001, Agent-002"" / Schleswig-Holstein,64.1,""Agent-001, Agent-002"" / Brandenburg,79.9,""Agent-001, Agent-002""",,2026-11-07T14:16:11
+t096,What is the population of Amsterdam?,UNRELATED,73ce1aad8f962283,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),rejected,"{""status"": ""rejected""}",correct,"
+
+",,,2026-11-07T14:16:32
+t097,Which cities lie within 25 km of Basel?,UNRELATED,1cd6226870cf6f0a,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),not-found,0 item(s): ,correct,"
+SELECT city_name, ST_AsText(centroid) AS point FROM cities WHERE city_name = 'Basel'
+","city_name,point,db","Basel is in neither database; the agents searched, asked the peer and returned not-found.
+Not rejected as UNRELATED, but the outcome is right.",2026-11-07T14:17:10
+t098,How do I bake sourdough bread?,UNRELATED,73ce1aad8f962283,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),rejected,"{""status"": ""rejected""}",correct,"
+
+",,,2026-11-07T14:17:29
+t099,Who won the 2014 football World Cup?,UNRELATED,73ce1aad8f962283,40,GPT-4o mini / A1 (5); GPT-4o mini / A2 (5); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),rejected,"{""status"": ""rejected""}",correct,"
+
+",,,2026-11-07T14:17:50
+t100,Which states border Texas?,UNRELATED,2de7462dac200d59,22,GPT-4o mini / A1 (1); GPT-4o mini / A2 (1); Qwen3-8B / A1 (5); Qwen3-8B / A2 (5); Qwen3-8B + QLoRA / A1 (5); Qwen3-8B + QLoRA / A2 (5),not-found,0 item(s): ,correct,"
+
+",,"Texas is not a German state. Answer 1 (Qwen, 2 GPT asks) ran an adjacency query, found nothing
+and flagged Texas as unknown; answer 2 (Claude, most GPT asks) rejected it. Both are acceptable.",2026-11-07T14:18:12
+t100,Which states border Texas?,UNRELATED,73ce1aad8f962283,18,GPT-4o mini / A1 (4); GPT-4o mini / A2 (4); Claude Haiku 5.5 / A1 (5); Claude Haiku 5.5 / A2 (5),rejected,"{""status"": ""rejected""}",correct,"
+
+",,"Texas is not a German state. Answer 1 (Qwen, 2 GPT asks) ran an adjacency query, found nothing
+and flagged Texas as unknown; answer 2 (Claude, most GPT asks) rejected it. Both are acceptable.",2026-11-07T14:18:12
